@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "kanzen",
+  "main": "./src/index.tsx",
+  "compatibility_date": "2026-07-06",
+  "assets": { "directory": "./public", "binding": "ASSETS", "not_found_handling": "none" },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "kanzen-db", "database_id": "PLACEHOLDER", "migrations_dir": "migrations" }
+  ],
+  "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "kanzen-assets" }]
+  // "routes": [
+  //   { "pattern": "kanzen.uz", "custom_domain": true },
+  //   { "pattern": "www.kanzen.uz", "custom_domain": true }
+  // ]
+}
