@@ -4,3 +4,4 @@ node_modules/
 *.secret.sql
 worker-configuration.d.ts
 .claude/
+*.tsbuildinfo
