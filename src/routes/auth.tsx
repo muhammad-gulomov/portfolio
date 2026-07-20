@@ -13,7 +13,14 @@ auth.get('/login', async (c) => {
   const error = !!c.req.query('error')
   const logout = !!c.req.query('logout')
   return c.html(
-    <Login owner={c.get('owner')} csrf={csrf} error={error} logout={logout} />,
+    <Login
+      owner={c.get('owner')}
+      csrf={csrf}
+      t={c.get('t')}
+      lang={c.get('lang')}
+      error={error}
+      logout={logout}
+    />,
   )
 })
 

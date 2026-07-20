@@ -1,10 +1,13 @@
 import { raw } from 'hono/html'
 import type { SiteProfile, WorkExperience, Project, BlogPost } from '../../types'
 
-// Format ISO date string (e.g. "2024-03-15") → "Mar 15, 2024" (used for blog preview)
-function fmtBlogDate(iso: string): string {
+type Lang = 'en' | 'ru'
+type TFn = (key: string, ...args: (string | number)[]) => string
+
+function fmtBlogDate(iso: string, lang: Lang): string {
   const d = new Date(iso)
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+  const locale = lang === 'ru' ? 'ru-RU' : 'en-US'
+  return d.toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 }
 
 function padNum(n: number): string {
@@ -17,9 +20,11 @@ interface HomeProps {
   workPeriods: Record<number, string>
   projects: Project[]
   latestPosts: BlogPost[]
+  t: TFn
+  lang: Lang
 }
 
-export function Home({ owner, work, workPeriods, projects, latestPosts }: HomeProps) {
+export function Home({ owner, work, workPeriods, projects, latestPosts, t, lang }: HomeProps) {
   const locationDisplay = owner.location && owner.location.trim() ? owner.location : 'Tashkent · UZ'
   const nameParts = owner.name ? owner.name.split(' ') : ['Muhammad', 'Gulomov']
   const firstName = nameParts[0] ?? 'Muhammad'
@@ -27,6 +32,7 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
   const bioLocation = owner.location && owner.location.trim()
     ? `${owner.location} (GMT+5)`
     : 'Tashkent, Uzbekistan (GMT+5)'
+  const tagline = lang === 'ru' ? t('hero.tagline') : (owner.tagline || t('hero.tagline'))
 
   return (
     <>
@@ -41,15 +47,15 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
 
         <div class="container">
           <div class="hero-index">
-            <span class="mono">Vol. 01</span>
+            <span class="mono">{t('hero.index')}</span>
             <span class="mono">—</span>
-            <span class="mono">Portfolio</span>
+            <span class="mono">v2026</span>
           </div>
 
           <div class="hero-grid">
             <div class="hero-main">
               <div class="hero-meta-top">
-                <span class="eyebrow">Software Engineer</span>
+                <span class="eyebrow">{t('job.title')}</span>
                 <span class="hero-city">{locationDisplay}</span>
               </div>
 
@@ -58,30 +64,27 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
                 <span class="line"><span><em>{lastName}</em>.</span></span>
               </h1>
 
-              <p class="hero-lede">{owner.tagline}</p>
+              <p class="hero-lede">{tagline}</p>
             </div>
 
             <aside class="hero-side">
               <div class="hero-now">
-                <span class="mono hero-now-label">Currently</span>
-                <p>
-                  Owning the stack behind <strong>Yodla</strong> — a driving-school
-                  education app used across Uzbekistan. Backend, web, mobile, devops.
-                </p>
+                <span class="mono hero-now-label">{t('hero.currently')}</span>
+                <p>{raw(t('hero.currently.text'))}</p>
               </div>
 
               <div class="hero-stats">
                 <div class="hstat">
                   <span class="hstat-n" data-counter="2">2</span>
-                  <span class="hstat-l">Years<br />writing code</span>
+                  <span class="hstat-l">{raw(t('stats.years'))}</span>
                 </div>
                 <div class="hstat">
                   <span class="hstat-n" data-counter="6">6</span>
-                  <span class="hstat-l">Projects<br />shipped</span>
+                  <span class="hstat-l">{raw(t('stats.projects'))}</span>
                 </div>
                 <div class="hstat">
                   <span class="hstat-n">∞</span>
-                  <span class="hstat-l">Curiosity<br />ceiling</span>
+                  <span class="hstat-l">{raw(t('stats.curiosity'))}</span>
                 </div>
               </div>
 
@@ -102,10 +105,10 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
 
               <div class="hero-ctas">
                 <a href="#work" class="btn primary magnetic" data-cursor="explore">
-                  <span>See my work</span> <span class="arrow">→</span>
+                  <span>{t('hero.cta.work')}</span> <span class="arrow">→</span>
                 </a>
                 <a href="/blog" class="btn magnetic" data-cursor="read">
-                  <span>Read journal</span>
+                  <span>{t('hero.cta.blog')}</span>
                 </a>
               </div>
             </aside>
@@ -113,7 +116,7 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
         </div>
 
         <div class="scroll-hint" aria-hidden="true">
-          <span>scroll</span>
+          <span>{t('hero.scroll')}</span>
         </div>
       </section>
 
@@ -138,10 +141,10 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
         <div class="container">
           <div class="section-header reveal">
             <div>
-              <div class="eyebrow" style="margin-bottom: 14px;">About · Chapter 01</div>
-              <h2 data-split="">I build things that <em>outlast</em> the hype cycle.</h2>
+              <div class="eyebrow" style="margin-bottom: 14px;">{t('about.eyebrow')}</div>
+              <h2 data-split="">{raw(t('about.title'))}</h2>
             </div>
-            <div class="section-index mono">01 · ABOUT</div>
+            <div class="section-index mono">{t('about.index')}</div>
           </div>
 
           <div class="about-grid">
@@ -153,39 +156,28 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
                 }
                 <div class="portrait-ring"></div>
                 <div class="portrait-tag">
-                  <span class="mono">— writing software since 2024</span>
+                  <span class="mono">{t('about.since')}</span>
                 </div>
               </div>
             </div>
 
             <div class="bio">
-              <p class="reveal" style="--d:.1s">
-                I'm a software engineer based in <strong>Tashkent</strong>. Most of my time is spent
-                on the <strong>Yodla platform</strong>, a driving-school education app — across the
-                backend, data layer, and the odd weekend experiment.
-              </p>
-              <p class="reveal" style="--d:.2s">
-                I gravitate toward problems where the right abstraction isn't obvious yet.
-                I've learned that shipping quickly beats shipping perfectly — and that the
-                best code is the code I didn't have to write.
-              </p>
-              <p class="reveal" style="--d:.3s">
-                When I'm not writing code, I'm probably re-reading a paragraph until it
-                stops feeling clever and starts feeling true.
-              </p>
+              <p class="reveal" style="--d:.1s">{raw(t('bio.p1'))}</p>
+              <p class="reveal" style="--d:.2s">{raw(t('bio.p2'))}</p>
+              <p class="reveal" style="--d:.3s">{raw(t('bio.p3'))}</p>
 
               <div class="bio-meta reveal" style="--d:.4s">
                 <div class="bio-row">
-                  <span class="bio-k mono">Based in</span>
+                  <span class="bio-k mono">{t('about.based')}</span>
                   <span class="bio-v">{bioLocation}</span>
                 </div>
                 <div class="bio-row">
-                  <span class="bio-k mono">Current focus</span>
-                  <span class="bio-v">Backend at <em>Yodla</em> · weekend experiments</span>
+                  <span class="bio-k mono">{t('about.focus')}</span>
+                  <span class="bio-v">{raw(t('about.focus.value'))}</span>
                 </div>
                 <div class="bio-row">
-                  <span class="bio-k mono">Languages</span>
-                  <span class="bio-v">Uzbek · Russian · English</span>
+                  <span class="bio-k mono">{t('about.languages')}</span>
+                  <span class="bio-v">{t('about.languages.value')}</span>
                 </div>
               </div>
             </div>
@@ -198,10 +190,10 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
         <div class="container">
           <div class="section-header reveal">
             <div>
-              <div class="eyebrow" style="margin-bottom: 14px;">Where I've been</div>
-              <h2 data-split="">Work <em>history</em>.</h2>
+              <div class="eyebrow" style="margin-bottom: 14px;">{t('work.eyebrow')}</div>
+              <h2 data-split="">{raw(t('work.title'))}</h2>
             </div>
-            <div class="section-index mono">02 · EXPERIENCE</div>
+            <div class="section-index mono">{t('work.index')}</div>
           </div>
 
           {work.length > 0
@@ -232,8 +224,8 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
                       )}
                       {w.tech && w.tech.trim() && (
                         <div class="t-tech">
-                          {w.tech.split(',').map((t, ti) => (
-                            <span key={ti}>{t.trim()}</span>
+                          {w.tech.split(',').map((tech, ti) => (
+                            <span key={ti}>{tech.trim()}</span>
                           ))}
                         </div>
                       )}
@@ -257,7 +249,7 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
             )
             : (
               <div class="empty-state reveal">
-                The page is still being written — experiences will land here soon.
+                {t('work.empty')}
               </div>
             )
           }
@@ -269,10 +261,10 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
         <div class="container">
           <div class="section-header reveal">
             <div>
-              <div class="eyebrow" style="margin-bottom: 14px;">What I've shipped</div>
-              <h2 data-split="">Selected <em>work</em>.</h2>
+              <div class="eyebrow" style="margin-bottom: 14px;">{t('projects.eyebrow')}</div>
+              <h2 data-split="">{raw(t('projects.title'))}</h2>
             </div>
-            <div class="section-index mono">03 · PROJECTS</div>
+            <div class="section-index mono">{t('projects.index')}</div>
           </div>
 
           {projects.length > 0
@@ -305,14 +297,14 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
                       <div class="pc-foot">
                         {p.tech && p.tech.trim() && (
                           <div class="tech-row">
-                            {p.tech.split(',').map((t, ti) => (
-                              <span key={ti}>{t.trim()}</span>
+                            {p.tech.split(',').map((tech, ti) => (
+                              <span key={ti}>{tech.trim()}</span>
                             ))}
                           </div>
                         )}
                         <div class="pc-kind">
-                          {p.url && p.url.trim() && <span>Live</span>}
-                          {(!p.url || !p.url.trim()) && p.githubUrl && p.githubUrl.trim() && <span>Source</span>}
+                          {p.url && p.url.trim() && <span>{t('projects.live')}</span>}
+                          {(!p.url || !p.url.trim()) && p.githubUrl && p.githubUrl.trim() && <span>{t('projects.source')}</span>}
                         </div>
                       </div>
                       <div class="pc-sheen" aria-hidden="true"></div>
@@ -323,7 +315,7 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
             )
             : (
               <div class="empty-state reveal">
-                Projects currently in the workshop. Come back soon.
+                {t('projects.empty')}
               </div>
             )
           }
@@ -335,12 +327,12 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
         <div class="container">
           <div class="section-header reveal">
             <div>
-              <div class="eyebrow" style="margin-bottom: 14px;">Notes from the desk</div>
-              <h2 data-split="">Recent <em>writing</em>.</h2>
+              <div class="eyebrow" style="margin-bottom: 14px;">{t('blogp.eyebrow')}</div>
+              <h2 data-split="">{raw(t('blogp.title'))}</h2>
             </div>
             <div class="section-index-wrap">
-              <div class="section-index mono">04 · JOURNAL</div>
-              <a href="/blog" class="see-all" data-cursor="read">All posts <span class="arrow">→</span></a>
+              <div class="section-index mono">{t('blogp.index')}</div>
+              <a href="/blog" class="see-all" data-cursor="read">{t('blogp.all')} <span class="arrow">→</span></a>
             </div>
           </div>
 
@@ -358,9 +350,9 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
                     <span class="pr-index mono">{padNum(i + 1)}</span>
                     <div class="pr-body">
                       <div class="pr-meta mono">
-                        <span>{fmtBlogDate(post.publishedAt)}</span>
+                        <span>{fmtBlogDate(post.publishedAt, lang)}</span>
                         <span class="sep">·</span>
-                        <span>{post.readingMinutes} min read</span>
+                        <span>{t('blog.minread', post.readingMinutes)}</span>
                       </div>
                       <h3 class="pr-title">{post.title}</h3>
                       <p class="pr-excerpt">{post.excerpt}</p>
@@ -372,7 +364,7 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
             )
             : (
               <div class="empty-state reveal">
-                No posts yet. The blank page is undefeated — for now.
+                {t('blogp.empty')}
               </div>
             )
           }
@@ -383,21 +375,18 @@ export function Home({ owner, work, workPeriods, projects, latestPosts }: HomePr
       <section class="cta-section">
         <div class="container">
           <div class="cta-inner reveal">
-            <span class="eyebrow" style="margin-bottom: 22px;">End of the page</span>
+            <span class="eyebrow" style="margin-bottom: 22px;">{t('cta.eyebrow')}</span>
             <h2 class="cta-head">
-              <span class="line"><span>Have something</span></span>
-              <span class="line"><span><em>worth building</em>?</span></span>
+              <span class="line"><span>{t('cta.line1')}</span></span>
+              <span class="line"><span>{raw(t('cta.line2'))}</span></span>
             </h2>
-            <p class="cta-sub">
-              I take on a small number of projects each year. If your thing is
-              technically interesting or genuinely useful — I'd love to hear about it.
-            </p>
+            <p class="cta-sub">{t('cta.sub')}</p>
             <div class="cta-ctas">
               <a href={owner.telegram} target="_blank" rel="noopener" class="btn primary magnetic" data-cursor="message">
-                <span>Message on Telegram</span> <span class="arrow">→</span>
+                <span>{t('cta.telegram')}</span> <span class="arrow">→</span>
               </a>
               <a href={owner.linkedin} target="_blank" rel="noopener" class="btn magnetic" data-cursor="connect">
-                <span>Connect on LinkedIn</span>
+                <span>{t('cta.linkedin')}</span>
               </a>
             </div>
           </div>

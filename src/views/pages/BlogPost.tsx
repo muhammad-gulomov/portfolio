@@ -1,32 +1,38 @@
 import { raw } from 'hono/html'
 import type { SiteProfile, BlogPost as BlogPostType } from '../../types'
 
+type Lang = 'en' | 'ru'
+type TFn = (key: string, ...args: (string | number)[]) => string
+
 // Format ISO date → "January 1, 2026" (matches Thymeleaf `MMMM d, yyyy`)
-function fmtPostDate(iso: string): string {
+function fmtPostDate(iso: string, lang: Lang): string {
   const d = new Date(iso)
-  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+  const locale = lang === 'ru' ? 'ru-RU' : 'en-US'
+  return d.toLocaleDateString(locale, { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 }
 
 interface BlogPostProps {
   owner: SiteProfile
   post: BlogPostType
   bodyHtml: string
+  t: TFn
+  lang: Lang
 }
 
-export function BlogPost({ owner, post, bodyHtml }: BlogPostProps) {
+export function BlogPost({ owner, post, bodyHtml, t, lang }: BlogPostProps) {
   return (
     <>
       <div class="reading-progress" id="readingProgress"></div>
 
       <article class="post-article">
         <div class="container-narrow">
-          <a href="/blog" class="post-back" data-cursor="back">← Back to journal</a>
+          <a href="/blog" class="post-back" data-cursor="back">{t('post.back')}</a>
 
           <header class="post-header">
             <div class="meta reveal">
-              <span>{fmtPostDate(post.publishedAt)}</span>
+              <span>{fmtPostDate(post.publishedAt, lang)}</span>
               <span class="dot"></span>
-              <span>{post.readingMinutes} min read</span>
+              <span>{t('blog.minread', post.readingMinutes)}</span>
               <span class="dot"></span>
               <span>{owner.name}</span>
             </div>
@@ -42,9 +48,9 @@ export function BlogPost({ owner, post, bodyHtml }: BlogPostProps) {
 
           <div class="post-footer">
             <div class="views">
-              Viewed <b>{post.views}</b> times
+              {raw(t('post.views', post.views))}
             </div>
-            <a href="/blog" class="post-back" style="margin: 0" data-cursor="back">← All posts</a>
+            <a href="/blog" class="post-back" style="margin: 0" data-cursor="back">{t('post.all')}</a>
           </div>
         </div>
       </article>

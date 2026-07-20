@@ -11,16 +11,16 @@
 }
 
 .admin-shell h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: clamp(2.4em, 6vw, 4em);
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.2em, 5.5vw, 3.4em);
     letter-spacing: -0.02em;
     margin-bottom: 16px;
 }
 
 .admin-shell h1 em {
-    color: var(--blue-400);
-    font-style: italic;
+    color: var(--gold-400);
+    font-style: normal;
 }
 
 .admin-shell .sub {
@@ -28,9 +28,11 @@
     margin-bottom: 48px;
 }
 
-/* Dashboard sections */
+/* Dashboard sections — override the landing-page `section`
+   padding from base.css, which otherwise adds 90-180px gaps. */
 .admin-section {
     margin-top: 56px;
+    padding: 0;
 }
 
 .admin-section header {
@@ -43,7 +45,7 @@
 }
 
 .admin-section header h2 {
-    font-family: 'Fraunces', serif;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
     font-weight: 600;
     font-size: 1.6em;
     color: var(--fg);
@@ -72,7 +74,7 @@
 }
 
 .admin-list .row:hover {
-    background: rgba(232, 195, 145, 0.05);
+    background: rgba(46, 230, 166, 0.05);
 }
 
 .admin-list .row .title {
@@ -108,7 +110,7 @@
 
 .admin-list .row .actions a,
 .admin-list .row .actions button {
-    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.74em;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -125,7 +127,7 @@
 }
 
 .admin-list .row .actions a:hover {
-    color: var(--ink-900);
+    color: var(--on-accent);
     border-color: var(--gold-500);
     background: var(--gold-500);
 }
@@ -140,8 +142,7 @@
     padding: 40px;
     text-align: center;
     color: var(--muted);
-    font-family: 'Fraunces', serif;
-    font-style: italic;
+    font-family: 'Inter', sans-serif;
 }
 
 /* Primary + secondary buttons in admin */
@@ -166,7 +167,7 @@
 }
 
 .admin-form label {
-    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.76em;
     letter-spacing: 0.22em;
     text-transform: uppercase;
@@ -192,7 +193,7 @@
     background: var(--surface);
     border: 1px solid var(--line-strong);
     color: var(--fg);
-    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 1em;
     border-radius: var(--r-sm);
     transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
@@ -216,7 +217,7 @@
     outline: none;
     border-color: var(--gold-500);
     background: var(--surface-hi);
-    box-shadow: 0 0 0 4px rgba(232, 195, 145, 0.12);
+    box-shadow: 0 0 0 4px rgba(46, 230, 166, 0.12);
 }
 
 .admin-form .row-2 {
@@ -229,7 +230,7 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.88em;
     letter-spacing: 0.02em;
     color: var(--fg);
@@ -240,6 +241,33 @@
     width: 18px;
     height: 18px;
     accent-color: var(--blue-500);
+}
+
+.admin-form .lang-block {
+    margin: 8px 0 28px;
+    padding: 22px 20px 8px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--ink-850, var(--ink-800));
+}
+
+.admin-form .lang-block > h3 {
+    margin: 0 0 18px;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 0.95em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--bone-50);
+}
+
+.admin-form .lang-block > h3 .hint {
+    margin-left: 8px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 0.85em;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--muted);
 }
 
 .admin-form .form-footer {
@@ -317,12 +345,12 @@
 
 .photo-input { display: grid; gap: 10px; flex: 1; min-width: 220px; }
 .photo-input input[type="file"] {
-    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.9em;
     color: var(--fg-dim);
 }
 .photo-input input[type="file"]::file-selector-button {
-    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.82em;
     letter-spacing: 0.06em;
     padding: 10px 16px;
@@ -365,11 +393,11 @@
     place-items: center;
     width: 46px;
     height: 46px;
-    border-radius: 50%;
+    border-radius: 12px;
     border: 1px solid var(--gold-500);
     color: var(--gold-400);
-    font-family: 'Fraunces', serif;
-    font-style: italic;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 600;
     font-size: 1.4em;
     margin-bottom: 26px;
     text-decoration: none;
@@ -378,21 +406,21 @@
 .login-mark:hover { box-shadow: 0 0 24px var(--gold-glow); }
 
 .login-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    font-size: 2.4em;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 2.2em;
     letter-spacing: -0.02em;
     line-height: 1;
     margin-bottom: 10px;
 }
-.login-title em { color: var(--gold-400); font-style: italic; }
+.login-title em { color: var(--gold-400); font-style: normal; }
 
 .login-sub { color: var(--muted); margin-bottom: 28px; font-size: 0.95em; }
 
 .login-form { display: grid; gap: 18px; }
 .login-form .field { display: grid; gap: 8px; }
 .login-form label {
-    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.72em;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -412,7 +440,7 @@
     outline: none;
     border-color: var(--gold-500);
     background: var(--surface-hi);
-    box-shadow: 0 0 0 4px rgba(232, 195, 145, 0.12);
+    box-shadow: 0 0 0 4px rgba(46, 230, 166, 0.12);
 }
 .login-submit { width: 100%; justify-content: center; margin-top: 6px; }
 

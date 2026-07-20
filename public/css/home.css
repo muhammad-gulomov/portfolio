@@ -121,31 +121,28 @@
 }
 
 .hero-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
     /* Sized to fit the 1.5fr hero column at every width — the longest word
        ("Muhammad") must not overflow. Was clamp(4em,14vw,11em), which blew
        past the column past ~1100px and got clipped by .hero overflow:hidden. */
     font-size: clamp(3.2em, 8vw, 7em);
-    line-height: 0.9;
+    line-height: 0.95;
     letter-spacing: -0.045em;
     color: var(--bone-50);
     overflow-wrap: break-word;
-    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
 }
 
 .hero-title em {
-    font-style: italic;
+    font-style: normal;
     color: var(--gold-400);
-    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
     position: relative;
 }
 
 .hero-lede {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: clamp(1.1em, 2vw, 1.5em);
-    line-height: 1.4;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.05em, 1.8vw, 1.35em);
+    line-height: 1.5;
     color: var(--bone-200);
     max-width: 540px;
     margin-top: 32px;
@@ -165,7 +162,7 @@
     padding: 20px 22px;
     border: 1px solid var(--line);
     border-radius: var(--r-md);
-    background: rgba(232, 195, 145, 0.03);
+    background: rgba(46, 230, 166, 0.04);
     position: relative;
     overflow: hidden;
 }
@@ -220,13 +217,12 @@
 
 .hstat-n {
     display: block;
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
     font-size: clamp(2em, 4vw, 3.2em);
     line-height: 1;
     color: var(--bone-50);
     letter-spacing: -0.03em;
-    font-variation-settings: "opsz" 144, "SOFT" 60;
 }
 
 .hstat:first-child .hstat-n,
@@ -266,7 +262,7 @@
 }
 
 .hero-socials a:hover {
-    color: var(--ink-900);
+    color: var(--on-accent);
     border-color: var(--gold-400);
     background: var(--gold-400);
     transform: translateY(-3px);
@@ -337,7 +333,7 @@
     border: 1px solid var(--line-strong);
     border-radius: var(--r-md);
     background:
-        radial-gradient(ellipse at 30% 30%, rgba(232, 195, 145, 0.18), transparent 60%),
+        radial-gradient(ellipse at 30% 30%, rgba(46, 230, 166, 0.12), transparent 60%),
         linear-gradient(180deg, var(--ink-800), var(--ink-900));
     overflow: hidden;
 }
@@ -358,15 +354,14 @@
     inset: 0;
     display: grid;
     place-items: center;
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
     font-size: clamp(6em, 18vw, 14em);
     color: var(--bone-50);
-    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
 }
 
 .portrait .initials em {
-    font-style: italic;
+    font-style: normal;
     background: linear-gradient(135deg, var(--gold-300), var(--gold-500) 60%, var(--gold-600));
     -webkit-background-clip: text;
     background-clip: text;
@@ -376,7 +371,7 @@
 .portrait-ring {
     position: absolute;
     inset: 32px;
-    border: 1px dashed rgba(232, 195, 145, 0.28);
+    border: 1px dashed rgba(46, 230, 166, 0.28);
     border-radius: 50%;
     animation: portraitRingSpin 60s linear infinite;
 }
@@ -415,7 +410,7 @@
     left: 20px;
     right: 20px;
     padding: 10px 14px;
-    background: rgba(10, 11, 15, 0.7);
+    background: var(--glass-strong);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--line);
@@ -447,12 +442,11 @@
 }
 
 .bio p {
-    font-family: 'Fraunces', serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 400;
-    font-size: clamp(1.05em, 1.6vw, 1.3em);
-    line-height: 1.55;
+    font-size: clamp(1em, 1.5vw, 1.15em);
+    line-height: 1.65;
     color: var(--bone-100);
-    font-variation-settings: "opsz" 24, "SOFT" 60;
 }
 
 .bio p strong {
@@ -462,8 +456,7 @@
 
 .bio p em {
     color: var(--gold-400);
-    font-style: italic;
-    font-variation-settings: "opsz" 24, "SOFT" 100, "WONK" 1;
+    font-style: normal;
 }
 
 .bio-meta {
@@ -496,7 +489,7 @@
 
 .bio-v em {
     color: var(--gold-400);
-    font-style: italic;
+    font-style: normal;
 }
 
 /* ========================================================= */
@@ -622,8 +615,8 @@
 }
 
 .t-role {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 600;
     font-size: clamp(1.4em, 2.4vw, 1.9em);
     color: var(--bone-50);
     margin-bottom: 4px;
@@ -632,12 +625,11 @@
 }
 
 .t-company {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 1.1em;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.02em;
+    font-weight: 500;
     color: var(--bone-200);
     margin-bottom: 16px;
-    font-variation-settings: "opsz" 30, "SOFT" 100, "WONK" 1;
 }
 
 .t-company a {
@@ -708,7 +700,7 @@
 
 .t-links a:hover {
     background: var(--gold-400);
-    color: var(--ink-900);
+    color: var(--on-accent);
     transform: translateY(-1px);
 }
 
@@ -745,13 +737,15 @@
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(ellipse 60% 40% at 0% 100%, rgba(232, 195, 145, 0.15), transparent 70%),
-        radial-gradient(ellipse 50% 40% at 100% 0%, rgba(232, 134, 107, 0.08), transparent 70%);
+        radial-gradient(ellipse 60% 40% at 0% 100%, rgba(46, 230, 166, 0.10), transparent 70%),
+        radial-gradient(ellipse 50% 40% at 100% 0%, rgba(79, 140, 255, 0.07), transparent 70%);
     opacity: 0;
     transition: opacity 0.6s var(--ease);
     pointer-events: none;
     z-index: 0;
 }
+
+.project-card:hover { background: var(--ink-800); }
 
 .project-card:hover::before { opacity: 1; }
 
@@ -763,7 +757,7 @@
     left: -50%;
     width: 50%;
     height: 200%;
-    background: linear-gradient(100deg, transparent, rgba(232, 195, 145, 0.05), transparent);
+    background: linear-gradient(100deg, transparent, rgba(46, 230, 166, 0.05), transparent);
     transform: translateX(-100%) skewX(-20deg);
     transition: transform 1s var(--ease);
     pointer-events: none;
@@ -807,8 +801,8 @@
 }
 
 .pc-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 600;
     font-size: clamp(1.5em, 2.4vw, 1.9em);
     line-height: 1.08;
     letter-spacing: -0.02em;
@@ -823,8 +817,8 @@
 }
 
 .pc-tagline {
-    font-family: 'Fraunces', serif;
-    font-size: 1em;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95em;
     line-height: 1.55;
     color: var(--bone-200);
     font-weight: 400;
@@ -855,7 +849,7 @@
     border-radius: 40px;
     color: var(--bone-300);
     letter-spacing: 0.04em;
-    background: rgba(245, 241, 234, 0.04);
+    background: rgba(231, 237, 244, 0.04);
     border: 1px solid var(--line);
 }
 
@@ -952,8 +946,8 @@
 .pr-meta .sep { color: var(--bone-500); }
 
 .pr-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 600;
     font-size: clamp(1.3em, 2.4vw, 1.9em);
     line-height: 1.12;
     letter-spacing: -0.02em;
@@ -965,8 +959,8 @@
 .preview-row:hover .pr-title { color: var(--gold-400); }
 
 .pr-excerpt {
-    font-family: 'Fraunces', serif;
-    font-size: 1em;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95em;
     line-height: 1.5;
     color: var(--bone-300);
     max-width: 70ch;
@@ -1030,14 +1024,13 @@
 }
 
 .cta-head {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
     font-size: clamp(2.5em, 7vw, 6em);
-    line-height: 0.95;
+    line-height: 0.98;
     letter-spacing: -0.045em;
     color: var(--bone-50);
     margin-bottom: 28px;
-    font-variation-settings: "opsz" 144, "SOFT" 30;
 }
 
 .cta-head .line {
@@ -1047,15 +1040,13 @@
 
 .cta-head em {
     color: var(--gold-400);
-    font-style: italic;
-    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+    font-style: normal;
 }
 
 .cta-sub {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: clamp(1em, 1.6vw, 1.2em);
-    line-height: 1.55;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1em, 1.6vw, 1.15em);
+    line-height: 1.6;
     color: var(--bone-200);
     margin-bottom: 40px;
     max-width: 56ch;
@@ -1078,9 +1069,8 @@
     border: 1px dashed var(--line-strong);
     border-radius: var(--r-md);
     color: var(--bone-300);
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 1.1em;
+    font-family: 'Inter', sans-serif;
+    font-size: 1em;
 }
 
 /* ========================================================= */

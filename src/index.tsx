@@ -9,6 +9,7 @@ import mediaRoutes from './routes/media'
 import authRoutes from './routes/auth'
 import adminRoutes from './routes/admin'
 import { ensureAdmin } from './bootstrap'
+import { localeMiddleware } from './i18n/locale'
 
 
 const app = new Hono<{ Bindings: Env; Variables: Vars }>()
@@ -32,7 +33,10 @@ app.use('*', async (c, next) => {
 // 1. jsxRenderer with root layout (must come before any c.render() call)
 app.use('*', Layout)
 
-// 2. Inject owner + currentYear into every request context (skip health check)
+// 2. Locale (?lang= + cookie) before any render
+app.use('*', localeMiddleware)
+
+// 3. Inject owner + currentYear into every request context (skip health check)
 app.use('*', async (c, next) => {
   if (c.req.path === '/healthz') return next()
   c.set('currentYear', new Date().getFullYear())

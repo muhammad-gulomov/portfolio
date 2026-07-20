@@ -1,9 +1,14 @@
+import { raw } from 'hono/html'
 import type { BlogPost } from '../../types'
 
+type Lang = 'en' | 'ru'
+type TFn = (key: string, ...args: (string | number)[]) => string
+
 // Format ISO date → "Jan 01 · 2026" (matches Thymeleaf `MMM dd · yyyy`)
-function fmtListDate(iso: string): string {
+function fmtListDate(iso: string, lang: Lang): string {
   const d = new Date(iso)
-  const month = d.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' })
+  const locale = lang === 'ru' ? 'ru-RU' : 'en-US'
+  const month = d.toLocaleDateString(locale, { month: 'short', timeZone: 'UTC' })
   const day = String(d.getUTCDate()).padStart(2, '0')
   const year = d.getUTCFullYear()
   return `${month} ${day} · ${year}`
@@ -11,27 +16,24 @@ function fmtListDate(iso: string): string {
 
 interface BlogListProps {
   posts: BlogPost[]
+  t: TFn
+  lang: Lang
 }
 
-export function BlogList({ posts }: BlogListProps) {
+export function BlogList({ posts, t, lang }: BlogListProps) {
   return (
     <>
       <section class="blog-hero">
         <div class="container">
           <div class="masthead">
-            <span>The Journal</span>
-            <span>Vol. 01 · Issue 01</span>
-            <span>Published irregularly</span>
+            <span>{t('blog.masthead.title')}</span>
+            <span>{t('blog.masthead.notes')}</span>
+            <span>{t('blog.masthead.freq')}</span>
           </div>
 
-          <div class="eyebrow reveal">The journal</div>
-          <h1 class="reveal" data-split="" style="--d:.1s">
-            Essays on <em>craft</em>, code, and the quiet in between.
-          </h1>
-          <p class="sub reveal" style="--d:.25s">
-            Short field notes from building things. Unpolished, first-principles,
-            occasionally wrong — published when they have something to say.
-          </p>
+          <div class="eyebrow reveal">{t('blog.eyebrow')}</div>
+          <h1 class="reveal" data-split="" style="--d:.1s">{raw(t('blog.title'))}</h1>
+          <p class="sub reveal" style="--d:.25s">{t('blog.sub')}</p>
         </div>
       </section>
 
@@ -48,19 +50,19 @@ export function BlogList({ posts }: BlogListProps) {
                     href={`/blog/${post.slug}`}
                     data-cursor="read"
                   >
-                    <div class="date">{fmtListDate(post.publishedAt)}</div>
+                    <div class="date">{fmtListDate(post.publishedAt, lang)}</div>
                     <div class="title-col">
                       <h2>{post.title}</h2>
                       <p class="excerpt">{post.excerpt}</p>
                     </div>
-                    <div class="read-time">{post.readingMinutes} min</div>
+                    <div class="read-time">{t('blog.min', post.readingMinutes)}</div>
                   </a>
                 ))}
               </div>
             )
             : (
               <div class="empty-state reveal">
-                No posts published yet. Come back soon — ideas are brewing.
+                {t('blog.empty')}
               </div>
             )
           }

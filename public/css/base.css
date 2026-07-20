@@ -1,43 +1,56 @@
 /* =========================================================
    Portfolio — Base
-   "Night Shift Editorial": warm ink, bone text, champagne gold
-   signature, editorial rhythm, ambitious motion.
+   "Modern Dark": graphite surfaces, cool gray text, mint
+   accent. GitHub/Linear-adjacent, technical and current.
    ========================================================= */
 
 :root {
-    /* Ink (surfaces) */
-    --ink-900:      #0a0b0f;   /* page background */
-    --ink-850:      #0e1017;
-    --ink-800:      #12141c;   /* card surface */
-    --ink-700:      #1a1d28;   /* elevated */
+    /* Ink (surfaces) — cool graphite */
+    --ink-900:      #0b0e14;   /* page background */
+    --ink-850:      #0d1119;
+    --ink-800:      #11151d;   /* card surface */
+    --ink-700:      #1a202b;   /* elevated */
 
-    /* Bone (text) — warm, not pure white */
-    --bone-50:      #f5f1ea;
-    --bone-100:     #ede7dc;
-    --bone-200:     #d7d0c2;
-    --bone-300:     #a8a294;
-    --bone-400:     #8f897b;   /* muted — lightened to clear WCAG AA (4.5:1) on ink */
-    --bone-500:     #55514a;
+    /* Text — cool gray ramp. Names kept from the previous
+       theme ("bone") so every existing rule keeps resolving. */
+    --bone-50:      #e7edf4;
+    --bone-100:     #d5dde6;
+    --bone-200:     #c3ccd7;
+    --bone-300:     #9aa5b3;
+    --bone-400:     #8b96a5;   /* muted — clears WCAG AA (4.5:1) on ink */
+    --bone-500:     #5b6572;
 
-    /* Signature — champagne / warm gold */
-    --gold-300:     #f0d4a3;
-    --gold-400:     #e8c391;   /* primary signature */
-    --gold-500:     #d4a574;
-    --gold-600:     #b58651;
-    --gold-glow:    rgba(232, 195, 145, 0.35);
+    /* Signature — mint. Names kept from the previous theme
+       ("gold") so every existing rule keeps resolving. */
+    --gold-300:     #5ff2c0;
+    --gold-400:     #2ee6a6;   /* primary signature */
+    --gold-500:     #22c58c;
+    --gold-600:     #189b6e;
+    --gold-glow:    rgba(46, 230, 166, 0.3);
 
-    /* Secondary — electric (used sparingly for motion only) */
-    --spark-300:    #8fc0f0;
-    --spark-400:    #6fb3f2;
-    --spark-500:    #3d8fd9;
+    /* Secondary — cool blue (ambient glow only) */
+    --spark-300:    #8fb4ff;
+    --spark-400:    #4f8cff;
+    --spark-500:    #2f6ae0;
 
     /* Status / functional */
-    --live-400:     #7dd6a1;   /* "available" dot */
-    --ember-400:    #e8866b;   /* ember — rare emphasis */
+    --live-400:     #4ade80;   /* "available" dot */
+    --ember-400:    #f87b6b;   /* rare emphasis / destructive */
 
     /* Lines */
-    --line:         rgba(245, 241, 234, 0.08);
-    --line-strong:  rgba(245, 241, 234, 0.18);
+    --line:         rgba(231, 237, 244, 0.08);
+    --line-strong:  rgba(231, 237, 244, 0.18);
+
+    /* Text placed on accent-filled surfaces (buttons, chips) */
+    --on-accent:    #04160f;
+
+    /* Translucent chrome (topbar, mobile menu, overlays) */
+    --glass:        rgba(11, 14, 20, 0.55);
+    --glass-strong: rgba(11, 14, 20, 0.88);
+    --glass-full:   rgba(11, 14, 20, 0.98);
+
+    /* Ambient grid hairlines */
+    --grid-line:    rgba(231, 237, 244, 0.025);
 
     /* Semantic aliases — legacy names redirected to new palette.
        Keeping these means older rules in home.css/blog.css still
@@ -53,11 +66,11 @@
     --blue-400:     var(--gold-400);
     --blue-500:     var(--gold-500);
     --blue-600:     var(--gold-600);
-    --blue-700:     #8d6b40;
-    --blue-900:     #3c2e1f;
+    --blue-700:     #157a58;
+    --blue-900:     #0d3b2c;
     --blue-50:      var(--bone-50);
     --blue-glow:    var(--gold-glow);
-    --blue-gradient: linear-gradient(135deg, #8d6b40 0%, #d4a574 45%, #f0d4a3 100%);
+    --blue-gradient: linear-gradient(135deg, #157a58 0%, #22c58c 45%, #5ff2c0 100%);
     --warm:         var(--gold-400);
 
     /* Motion */
@@ -69,15 +82,68 @@
     --dur-slow:     0.9s;
 
     /* Radii */
-    --r-sm: 2px;
-    --r-md: 6px;
-    --r-lg: 14px;
+    --r-sm: 6px;
+    --r-md: 12px;
+    --r-lg: 16px;
 
     /* Layout */
     --container: 1240px;
     --gutter:    clamp(20px, 4vw, 56px);
     --status-h:  34px;    /* top ticker height */
 }
+
+/* =========================================================
+   Light theme — token remap only; every rule below reads
+   from the same variables. Toggled via data-theme on <html>.
+   ========================================================= */
+
+html[data-theme="light"] {
+    --ink-900:      #f6f8fa;   /* page background */
+    --ink-850:      #ffffff;
+    --ink-800:      #ffffff;   /* card surface */
+    --ink-700:      #e9edf3;   /* elevated */
+
+    --bone-50:      #0e1420;
+    --bone-100:     #202a38;
+    --bone-200:     #39465a;
+    --bone-300:     #5a6a80;
+    --bone-400:     #5f7186;   /* muted — clears WCAG AA on the light bg */
+    --bone-500:     #93a1b3;
+
+    /* Accent darkened so it stays readable as text on white */
+    --gold-300:     #0d9f70;
+    --gold-400:     #0a8a60;
+    --gold-500:     #087a54;
+    --gold-600:     #066044;
+    --gold-glow:    rgba(10, 138, 96, 0.22);
+
+    --live-400:     #16a34a;
+    --ember-400:    #dc2626;
+
+    --line:         rgba(14, 20, 32, 0.10);
+    --line-strong:  rgba(14, 20, 32, 0.22);
+
+    --on-accent:    #ffffff;
+
+    --glass:        rgba(246, 248, 250, 0.6);
+    --glass-strong: rgba(246, 248, 250, 0.9);
+    --glass-full:   rgba(246, 248, 250, 0.98);
+
+    --grid-line:    rgba(14, 20, 32, 0.035);
+
+    --blue-700:     #066044;
+    --blue-900:     #dcefe7;
+    --blue-gradient: linear-gradient(135deg, #066044 0%, #087a54 45%, #0d9f70 100%);
+}
+
+/* Light-mode adjustments that tokens alone can't express */
+html[data-theme="light"] .grain { opacity: 0.035; }
+html[data-theme="light"] .cursor { mix-blend-mode: normal; }
+html[data-theme="light"] .cursor:not(.visible) { opacity: 0; }
+html[data-theme="light"] .cursor.visible { opacity: 0.4; }
+html[data-theme="light"] .login-card { box-shadow: 0 30px 80px -30px rgba(15, 23, 42, 0.25); }
+html[data-theme="light"] .login-alert { color: #b91c1c; }
+html[data-theme="light"] .login-note { color: #15803d; }
 
 *, *::before, *::after {
     box-sizing: border-box;
@@ -96,7 +162,7 @@ html {
 body {
     background: var(--ink-900);
     color: var(--bone-50);
-    font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-weight: 400;
     line-height: 1.55;
     overflow-x: hidden;
@@ -105,7 +171,7 @@ body {
     letter-spacing: -0.005em;
 }
 
-/* Ambient layer 1 — faint grid to anchor editorial feel */
+/* Ambient layer 1 — faint grid to anchor the technical feel */
 body::before {
     content: '';
     position: fixed;
@@ -113,14 +179,14 @@ body::before {
     z-index: -3;
     pointer-events: none;
     background-image:
-        linear-gradient(to right, rgba(245, 241, 234, 0.025) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(245, 241, 234, 0.025) 1px, transparent 1px);
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
     background-size: 64px 64px;
     mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
     -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
 }
 
-/* Ambient layer 2 — slow drifting aurora in warm gold/ember */
+/* Ambient layer 2 — slow drifting glow in mint/blue */
 body::after {
     content: '';
     position: fixed;
@@ -128,9 +194,9 @@ body::after {
     z-index: -2;
     pointer-events: none;
     background:
-        radial-gradient(ellipse 40% 30% at 8% 18%, rgba(232, 195, 145, 0.10), transparent 60%),
-        radial-gradient(ellipse 50% 40% at 92% 82%, rgba(232, 134, 107, 0.07), transparent 60%),
-        radial-gradient(ellipse 30% 25% at 50% 50%, rgba(111, 179, 242, 0.04), transparent 60%);
+        radial-gradient(ellipse 40% 30% at 8% 18%, rgba(46, 230, 166, 0.07), transparent 60%),
+        radial-gradient(ellipse 50% 40% at 92% 82%, rgba(79, 140, 255, 0.06), transparent 60%),
+        radial-gradient(ellipse 30% 25% at 50% 50%, rgba(46, 230, 166, 0.03), transparent 60%);
     filter: blur(90px);
     animation: drift 28s var(--ease) infinite alternate;
 }
@@ -157,7 +223,7 @@ body::after {
    ========================================================= */
 
 .serif {
-    font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
     font-optical-sizing: auto;
 }
 
@@ -167,25 +233,23 @@ body::after {
 }
 
 h1, h2, h3, h4 {
-    font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
-    font-weight: 500;
-    line-height: 1.02;
-    letter-spacing: -0.025em;
-    font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 0;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
     color: var(--bone-50);
 }
 
-h2 { font-size: clamp(2.2em, 5vw, 4em); }
-h3 { font-size: clamp(1.4em, 2.5vw, 2em); }
+h2 { font-size: clamp(2em, 4.5vw, 3.4em); }
+h3 { font-size: clamp(1.3em, 2.4vw, 1.8em); }
 
 p {
     color: var(--bone-200);
 }
 
+/* Accent words in headings — mint, upright (Space Grotesk has no italic). */
 em {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+    font-style: normal;
 }
 
 a {
@@ -212,7 +276,7 @@ a:hover { color: var(--gold-300); }
     z-index: 2000;
     padding: 10px 16px;
     background: var(--gold-400);
-    color: var(--ink-900);
+    color: var(--on-accent);
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.78em;
     letter-spacing: 0.08em;
@@ -220,11 +284,11 @@ a:hover { color: var(--gold-300); }
     transform: translateY(-180%);
     transition: transform var(--dur-fast) var(--ease);
 }
-.skip-link:focus { transform: translateY(0); color: var(--ink-900); }
+.skip-link:focus { transform: translateY(0); color: var(--on-accent); }
 
 ::selection {
     background: var(--gold-500);
-    color: var(--ink-900);
+    color: var(--on-accent);
 }
 
 .eyebrow {
@@ -273,7 +337,7 @@ section {
 
 .section-header h2 em {
     color: var(--gold-400);
-    font-style: italic;
+    font-style: normal;
 }
 
 .section-header .section-index {
@@ -344,6 +408,57 @@ section {
 
 .statusbar .clock { color: var(--gold-400); }
 
+/* Language switch + compact theme toggle living in the strip */
+.statusbar .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: -8px;
+}
+
+.statusbar .lang-switch a {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 22px;
+    border-radius: 4px;
+    opacity: 0.45;
+    transition: opacity var(--dur-fast) var(--ease),
+                transform var(--dur-fast) var(--ease);
+    line-height: 1;
+}
+
+.statusbar .lang-switch a:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
+
+.statusbar .lang-switch a.active {
+    opacity: 1;
+    outline: 1px solid var(--gold-400);
+    outline-offset: 1px;
+}
+
+.statusbar .lang-switch .flag {
+    font-size: 14px;
+    font-style: normal;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.statusbar .lang-switch .lsep { display: none; }
+
+.statusbar .theme-toggle.compact {
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--bone-300);
+}
+
+.statusbar .theme-toggle.compact:hover { color: var(--gold-400); }
+
 /* =========================================================
    Top navigation
    ========================================================= */
@@ -355,7 +470,7 @@ section {
     right: 0;
     z-index: 50;
     padding: 14px 0;
-    background: rgba(10, 11, 15, 0.55);
+    background: var(--glass);
     backdrop-filter: saturate(160%) blur(20px);
     -webkit-backdrop-filter: saturate(160%) blur(20px);
     border-bottom: 1px solid transparent;
@@ -365,7 +480,7 @@ section {
 }
 
 .topbar.scrolled {
-    background: rgba(10, 11, 15, 0.88);
+    background: var(--glass-strong);
     border-bottom-color: var(--line);
     padding: 10px 0;
 }
@@ -373,17 +488,25 @@ section {
 .topbar .container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 20px;
+}
+
+/* Nav hugs the right edge; the actions cluster follows it. */
+.topbar nav { margin-left: auto; }
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .logo {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    font-family: 'Fraunces', serif;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
     font-size: 1.05em;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--bone-50);
     letter-spacing: -0.01em;
 }
@@ -396,10 +519,10 @@ section {
     background: transparent;
     border: 1px solid var(--gold-500);
     color: var(--gold-400);
-    font-style: italic;
+    font-style: normal;
     font-weight: 600;
     font-size: 0.95em;
-    border-radius: 50%;
+    border-radius: 10px;
     position: relative;
     overflow: hidden;
     transition: color var(--dur-fast) var(--ease),
@@ -413,12 +536,12 @@ section {
     inset: 0;
     background: var(--gold-400);
     transform: scale(0);
-    border-radius: 50%;
+    border-radius: 10px;
     transition: transform 0.5s var(--ease);
 }
 
 .logo:hover .mark {
-    color: var(--ink-900);
+    color: var(--on-accent);
     transform: rotate(360deg);
 }
 
@@ -450,7 +573,7 @@ section {
     display: inline-block;
     padding: 10px 16px;
     color: var(--bone-200);
-    font-family: 'Instrument Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.88em;
     font-weight: 500;
     letter-spacing: 0.01em;
@@ -484,20 +607,44 @@ section {
 .nav a.cta {
     margin-left: 10px;
     padding: 10px 20px;
-    background: var(--bone-50);
-    color: var(--ink-900);
-    border-radius: 40px;
-    font-weight: 500;
+    background: var(--gold-400);
+    color: var(--on-accent);
+    border-radius: 10px;
+    font-weight: 600;
     transition: background var(--dur-fast) var(--ease),
                 color var(--dur-fast) var(--ease),
                 transform var(--dur-fast) var(--ease);
 }
 
 .nav a.cta:hover {
-    background: var(--gold-400);
-    color: var(--ink-900);
+    background: var(--gold-300);
+    color: var(--on-accent);
     transform: translateY(-1px);
 }
+
+.theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    background: transparent;
+    color: var(--bone-200);
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: color var(--dur-fast) var(--ease),
+                border-color var(--dur-fast) var(--ease);
+}
+
+.theme-toggle:hover {
+    color: var(--gold-400);
+    border-color: var(--gold-400);
+}
+
+/* Show the icon of the mode you'd switch to */
+.theme-toggle .icon-moon { display: none; }
+html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
 .nav-toggle {
     display: none;
@@ -524,22 +671,21 @@ section {
     --btn-fg: var(--bone-50);
     --btn-border: var(--line-strong);
     --btn-fill: var(--bone-50);
-    --btn-fill-fg: var(--ink-900);
+    --btn-fill-fg: var(--on-accent);
 
     position: relative;
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 16px 28px;
+    padding: 14px 26px;
     border: 1px solid var(--btn-border);
     background: var(--btn-bg);
     color: var(--btn-fg);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72em;
-    font-weight: 500;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    border-radius: 100px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88em;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-radius: 10px;
     cursor: pointer;
     overflow: hidden;
     transition: border-color var(--dur-fast) var(--ease),
@@ -575,16 +721,16 @@ section {
 }
 
 .btn.primary {
-    --btn-bg: var(--bone-50);
-    --btn-fg: var(--ink-900);
-    --btn-border: var(--bone-50);
-    --btn-fill: var(--gold-400);
-    --btn-fill-fg: var(--ink-900);
+    --btn-bg: var(--gold-400);
+    --btn-fg: var(--on-accent);
+    --btn-border: var(--gold-400);
+    --btn-fill: var(--gold-300);
+    --btn-fill-fg: var(--on-accent);
 }
 
 .btn.gold {
     --btn-bg: var(--gold-400);
-    --btn-fg: var(--ink-900);
+    --btn-fg: var(--on-accent);
     --btn-border: var(--gold-400);
     --btn-fill: var(--ink-900);
     --btn-fill-fg: var(--bone-50);
@@ -606,7 +752,7 @@ section {
     overflow: hidden;
     border-top: 1px solid var(--line);
     background:
-        radial-gradient(ellipse 70% 120% at 50% 100%, rgba(232, 195, 145, 0.12), transparent 60%);
+        radial-gradient(ellipse 70% 120% at 50% 100%, rgba(46, 230, 166, 0.07), transparent 60%);
 }
 
 .site-footer::before {
@@ -627,12 +773,11 @@ section {
 }
 
 .site-footer .wordmark {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
     font-size: clamp(3.8em, 14vw, 13em);
-    line-height: 0.86;
+    line-height: 0.9;
     letter-spacing: -0.045em;
-    font-variation-settings: "opsz" 144, "SOFT" 20;
     color: var(--bone-50);
     margin-bottom: 56px;
     user-select: none;
@@ -640,9 +785,8 @@ section {
 }
 
 .site-footer .wordmark em {
-    font-style: italic;
+    font-style: normal;
     color: var(--gold-400);
-    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
 }
 
 .site-footer .foot-grid {
@@ -700,7 +844,7 @@ section {
 }
 
 .site-footer .socials a:hover {
-    color: var(--ink-900);
+    color: var(--on-accent);
     border-color: var(--gold-400);
     background: var(--gold-400);
     transform: translateY(-2px);
@@ -746,10 +890,10 @@ section {
 
 .reveal {
     opacity: 0;
-    transform: translateY(48px);
-    transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+    transform: translateY(24px);
+    transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
     transition-delay: var(--d, 0s);
-    animation: revealSafety 0.5s var(--ease) 2.5s forwards;
+    animation: revealSafety 0.4s var(--ease) 1.2s forwards;
 }
 
 .reveal.in {
@@ -763,7 +907,7 @@ section {
     transform: translateX(-30px);
     transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
     transition-delay: var(--d, 0s);
-    animation: revealSafetyX 0.6s var(--ease) 2.5s forwards;
+    animation: revealSafetyX 0.4s var(--ease) 1.2s forwards;
 }
 
 .reveal-x.in {
@@ -780,7 +924,7 @@ section {
                 transform var(--dur-slow) var(--ease-out),
                 filter var(--dur-slow) var(--ease-out);
     transition-delay: var(--d, 0s);
-    animation: revealSafetyZoom 0.6s var(--ease) 2.5s forwards;
+    animation: revealSafetyZoom 0.4s var(--ease) 1.2s forwards;
     will-change: transform, opacity, filter;
 }
 
@@ -797,7 +941,7 @@ section {
     clip-path: inset(0 100% 0 0);
     transition: clip-path 1.2s var(--ease-out);
     transition-delay: var(--d, 0s);
-    animation: revealSafetyClip 0.6s var(--ease) 2.5s forwards;
+    animation: revealSafetyClip 0.4s var(--ease) 1.2s forwards;
 }
 
 .reveal-clip.in {
@@ -862,7 +1006,7 @@ section {
     height: 2px;
     z-index: 100;
     pointer-events: none;
-    background: rgba(245, 241, 234, 0.05);
+    background: rgba(231, 237, 244, 0.05);
 }
 
 .scroll-progress > span {
@@ -892,7 +1036,7 @@ section {
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
     background:
-        linear-gradient(to bottom, transparent, rgba(232, 195, 145, 0.02), transparent);
+        linear-gradient(to bottom, transparent, rgba(46, 230, 166, 0.02), transparent);
     mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
     -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
 }
@@ -911,9 +1055,9 @@ section {
     display: inline-flex;
     align-items: center;
     gap: 20px;
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
-    font-size: clamp(2em, 5vw, 4em);
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.8em, 4.5vw, 3.4em);
     line-height: 1;
     letter-spacing: -0.03em;
     color: var(--bone-100);
@@ -921,7 +1065,7 @@ section {
 }
 
 .marquee-item em {
-    font-style: italic;
+    font-style: normal;
     color: var(--gold-400);
 }
 
@@ -976,7 +1120,7 @@ section {
     padding: 6px 14px;
     border-radius: 100px;
     background: var(--gold-400);
-    color: var(--ink-900);
+    color: var(--on-accent);
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.66em;
     letter-spacing: 0.18em;
@@ -1092,7 +1236,7 @@ section {
         top: 100%;
         left: 0;
         right: 0;
-        background: rgba(10, 11, 15, 0.98);
+        background: var(--glass-full);
         backdrop-filter: blur(20px);
         padding: 14px 24px 22px;
         border-bottom: 1px solid var(--line);
@@ -1115,11 +1259,14 @@ section {
         margin-top: 10px;
     }
     .nav-toggle { display: inline-block; }
+    /* Nav is hidden here, so its auto margin no longer pushes the
+       actions cluster to the right — do it ourselves. */
+    .topbar-actions { margin-left: auto; }
 }
 
 @media (max-width: 540px) {
     .container { padding: 0 22px; }
-    .btn { padding: 13px 22px; font-size: 0.68em; letter-spacing: 0.18em; }
+    .btn { padding: 12px 20px; font-size: 0.84em; letter-spacing: 0.01em; }
     .site-footer .wordmark { font-size: clamp(2.6em, 18vw, 4.6em); }
     .site-footer .foot-grid { grid-template-columns: 1fr; }
     .site-footer .foot-bottom { flex-direction: column; align-items: flex-start; }
@@ -1161,3 +1308,21 @@ section {
 @media (hover: none) {
     .nav a:hover { background: transparent; }
 }
+
+/* =========================================================
+   Scrollbar — match the graphite surfaces
+   ========================================================= */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ink-700) var(--ink-900);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--ink-900); }
+::-webkit-scrollbar-thumb {
+    background: var(--ink-700);
+    border-radius: 6px;
+    border: 2px solid var(--ink-900);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--bone-500); }

@@ -7,11 +7,15 @@
 import { Hono } from 'hono'
 import { describe, it, expect } from 'vitest'
 import type { SiteProfile, WorkExperience, Project, BlogPost, Vars } from '../src/types'
+import { t as translate } from '../src/i18n/messages'
 import { Home } from '../src/views/pages/Home'
 import { BlogList } from '../src/views/pages/BlogList'
 import { BlogPost as BlogPostPage } from '../src/views/pages/BlogPost'
 import { Login } from '../src/views/pages/Login'
 import LayoutMiddleware from '../src/views/Layout'
+
+const t = (key: string, ...args: (string | number)[]) => translate('en', key, ...args)
+const lang = 'en' as const
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -121,6 +125,8 @@ describe('DOCTYPE emission', () => {
     app.get('/t', (c) => {
       c.set('owner', owner)
       c.set('currentYear', 2026)
+      c.set('lang', lang)
+      c.set('t', t)
       return c.render(<p>x</p>, { title: 'T' })
     })
     const res = await app.request('/t')
@@ -131,7 +137,7 @@ describe('DOCTYPE emission', () => {
 
   it('Login standalone component starts with <!DOCTYPE html>', async () => {
     const app = new Hono()
-    app.get('/login', (c) => c.html(<Login owner={owner} csrf="tok" />))
+    app.get('/login', (c) => c.html(<Login owner={owner} csrf="tok" t={t} lang={lang} />))
     const res = await app.request('/login')
     const body = await res.text()
     expect(body.toLowerCase()).toMatch(/^<!doctype html>/)
@@ -151,6 +157,8 @@ describe('Home', () => {
           workPeriods={workPeriods}
           projects={projects}
           latestPosts={latestPosts}
+          t={t}
+          lang={lang}
         />,
       ),
     )
@@ -196,6 +204,8 @@ describe('Home', () => {
           workPeriods={{}}
           projects={[]}
           latestPosts={[]}
+          t={t}
+          lang={lang}
         />,
       ),
     )
@@ -212,7 +222,7 @@ describe('Home', () => {
 describe('BlogList', () => {
   it('renders each post title and excerpt', async () => {
     const app = new Hono()
-    app.get('/bl', (c) => c.html(<BlogList posts={latestPosts} />))
+    app.get('/bl', (c) => c.html(<BlogList posts={latestPosts} t={t} lang={lang} />))
     const res = await app.request('/bl')
     expect(res.status).toBe(200)
     const body = await res.text()
@@ -228,7 +238,7 @@ describe('BlogList', () => {
 
   it('renders empty-state when no posts', async () => {
     const app = new Hono()
-    app.get('/empty', (c) => c.html(<BlogList posts={[]} />))
+    app.get('/empty', (c) => c.html(<BlogList posts={[]} t={t} lang={lang} />))
     const res = await app.request('/empty')
     const body = await res.text()
     expect(body).toContain('No posts published yet')
@@ -244,7 +254,7 @@ describe('BlogPost', () => {
 
     const app = new Hono()
     app.get('/bp', (c) =>
-      c.html(<BlogPostPage owner={owner} post={post} bodyHtml={bodyHtml} />),
+      c.html(<BlogPostPage owner={owner} post={post} bodyHtml={bodyHtml} t={t} lang={lang} />),
     )
     const res = await app.request('/bp')
     expect(res.status).toBe(200)
@@ -262,7 +272,7 @@ describe('BlogPost', () => {
     // View count
     expect(body).toContain('42')
     // Back links
-    expect(body).toContain('Back to journal')
+    expect(body).toContain('Back to blog')
     expect(body).toContain('/blog')
     // Reading progress bar
     expect(body).toContain('readingProgress')
@@ -275,7 +285,7 @@ describe('Login', () => {
   it('renders standalone form posting to /login with _csrf hidden field', async () => {
     const app = new Hono()
     app.get('/login', (c) =>
-      c.html(<Login owner={owner} csrf="test-csrf-token" />),
+      c.html(<Login owner={owner} csrf="test-csrf-token" t={t} lang={lang} />),
     )
     const res = await app.request('/login')
     expect(res.status).toBe(200)
@@ -303,12 +313,15 @@ describe('Login', () => {
     // Standalone CSS
     expect(body).toContain('base.css')
     expect(body).toContain('admin.css')
+    expect(body).toContain('Space+Grotesk')
+    expect(body).toContain('#0b0e14')
+    expect(body).toContain('v2026')
   })
 
   it('shows error message when error=true', async () => {
     const app = new Hono()
     app.get('/login-err', (c) =>
-      c.html(<Login owner={owner} csrf="tok" error={true} />),
+      c.html(<Login owner={owner} csrf="tok" t={t} lang={lang} error={true} />),
     )
     const res = await app.request('/login-err')
     const body = await res.text()
@@ -319,7 +332,7 @@ describe('Login', () => {
   it('shows logout message when logout=true', async () => {
     const app = new Hono()
     app.get('/login-out', (c) =>
-      c.html(<Login owner={owner} csrf="tok" logout={true} />),
+      c.html(<Login owner={owner} csrf="tok" t={t} lang={lang} logout={true} />),
     )
     const res = await app.request('/login-out')
     const body = await res.text()
@@ -331,7 +344,7 @@ describe('Login', () => {
   it('shows no alert when neither error nor logout', async () => {
     const app = new Hono()
     app.get('/login-clean', (c) =>
-      c.html(<Login owner={owner} csrf="tok" />),
+      c.html(<Login owner={owner} csrf="tok" t={t} lang={lang} />),
     )
     const res = await app.request('/login-clean')
     const body = await res.text()

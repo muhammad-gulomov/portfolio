@@ -15,27 +15,24 @@
 .blog-hero .eyebrow { margin-bottom: 22px; }
 
 .blog-hero h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
-    font-size: clamp(3em, 10vw, 7em);
-    line-height: 0.95;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.6em, 8vw, 5.5em);
+    line-height: 1;
     letter-spacing: -0.04em;
     margin-bottom: 28px;
-    font-variation-settings: "opsz" 144, "SOFT" 40;
     max-width: 22ch;
 }
 
 .blog-hero h1 em {
     color: var(--gold-400);
-    font-style: italic;
-    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+    font-style: normal;
 }
 
 .blog-hero .sub {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: clamp(1.05em, 1.8vw, 1.35em);
-    line-height: 1.5;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1em, 1.7vw, 1.2em);
+    line-height: 1.6;
     color: var(--bone-200);
     max-width: 640px;
 }
@@ -109,8 +106,8 @@
 }
 
 .post-row .title-col h2 {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 600;
     font-size: clamp(1.4em, 2.6vw, 2.1em);
     color: var(--bone-50);
     margin-bottom: 10px;
@@ -124,9 +121,9 @@
 }
 
 .post-row .excerpt {
-    font-family: 'Fraunces', serif;
+    font-family: 'Inter', sans-serif;
     color: var(--bone-200);
-    font-size: 1em;
+    font-size: 0.95em;
     line-height: 1.55;
     max-width: 640px;
 }
@@ -214,24 +211,21 @@
 }
 
 .post-header h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    font-size: clamp(2.4em, 6vw, 4.5em);
-    line-height: 1.02;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.2em, 5.5vw, 4em);
+    line-height: 1.05;
     letter-spacing: -0.035em;
     margin-bottom: 22px;
-    font-variation-settings: "opsz" 144, "SOFT" 40;
     color: var(--bone-50);
 }
 
 .post-header .lead {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: clamp(1.15em, 1.8vw, 1.4em);
-    line-height: 1.5;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.1em, 1.7vw, 1.3em);
+    line-height: 1.55;
     color: var(--bone-200);
     max-width: 60ch;
-    font-variation-settings: "opsz" 36, "SOFT" 100, "WONK" 1;
 }
 
 /* Reading progress bar — sits below the status strip */
@@ -253,11 +247,10 @@
 
 .prose {
     color: var(--bone-100);
-    font-size: 1.18em;
-    line-height: 1.75;
-    font-family: 'Fraunces', serif;
+    font-size: 1.1em;
+    line-height: 1.8;
+    font-family: 'Inter', sans-serif;
     font-weight: 400;
-    font-variation-settings: "opsz" 14, "SOFT" 50;
     overflow-wrap: break-word;
 }
 
@@ -265,28 +258,14 @@
     margin-top: 1.4em;
 }
 
-.prose > p:first-of-type::first-letter {
-    font-family: 'Fraunces', serif;
-    float: left;
-    font-size: 4.2em;
-    line-height: 0.85;
-    padding-right: 14px;
-    padding-top: 6px;
-    color: var(--gold-400);
-    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
-    font-style: italic;
-    font-weight: 500;
-}
-
 .prose h2,
 .prose h3 {
-    font-weight: 500;
+    font-weight: 600;
     color: var(--bone-50);
     letter-spacing: -0.025em;
     line-height: 1.15;
     margin-top: 2.2em;
-    font-family: 'Fraunces', serif;
-    font-variation-settings: "opsz" 60, "SOFT" 30;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
 }
 
 .prose h2 {
@@ -318,12 +297,11 @@
 .prose em {
     color: var(--gold-400);
     font-style: italic;
-    font-variation-settings: "opsz" 14, "SOFT" 100, "WONK" 1;
 }
 
 .prose a {
     color: var(--gold-400);
-    border-bottom: 1px solid rgba(232, 195, 145, 0.35);
+    border-bottom: 1px solid rgba(46, 230, 166, 0.35);
     padding-bottom: 2px;
     transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
@@ -339,9 +317,8 @@
     margin: 2.2em 0;
     color: var(--bone-50);
     font-style: italic;
-    font-size: 1.15em;
-    line-height: 1.55;
-    font-variation-settings: "opsz" 36, "SOFT" 100, "WONK" 1;
+    font-size: 1.1em;
+    line-height: 1.6;
 }
 
 .prose ul,
@@ -377,8 +354,8 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.85em;
     padding: 2px 8px;
-    background: rgba(232, 195, 145, 0.08);
-    border: 1px solid rgba(232, 195, 145, 0.2);
+    background: rgba(46, 230, 166, 0.08);
+    border: 1px solid rgba(46, 230, 166, 0.2);
     border-radius: var(--r-sm);
     color: var(--gold-300);
 }
@@ -406,8 +383,8 @@
     border-radius: 50%;
     background: var(--gold-400);
     box-shadow:
-        18px 0 0 0 rgba(232, 195, 145, 0.4),
-        36px 0 0 0 rgba(232, 195, 145, 0.2);
+        18px 0 0 0 rgba(46, 230, 166, 0.4),
+        36px 0 0 0 rgba(46, 230, 166, 0.2);
 }
 
 .prose pre code {
@@ -447,7 +424,7 @@
     width: 100%;
     border-collapse: collapse;
     margin: 2em 0;
-    font-family: 'Instrument Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.95em;
 }
 
@@ -516,7 +493,6 @@
     .post-header .lead { font-size: 1.12em; }
 
     .prose { font-size: 1.05em; line-height: 1.7; }
-    .prose > p:first-of-type::first-letter { font-size: 3.6em; }
     .prose h2 { font-size: 1.5em; }
     .prose h3 { font-size: 1.22em; }
     .prose pre { padding: 20px 20px 20px 20px; font-size: 0.82em; }
@@ -546,5 +522,4 @@
 
     .post-article { padding: calc(var(--status-h) + 96px) 0 64px; }
     .prose blockquote { padding-left: 20px; font-size: 1.05em; }
-    .prose > p:first-of-type::first-letter { font-size: 3em; padding-right: 10px; }
 }

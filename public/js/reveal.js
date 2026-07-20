@@ -36,8 +36,9 @@
             const n = new Date();
             const hh = String(n.getHours()).padStart(2, '0');
             const mm = String(n.getMinutes()).padStart(2, '0');
-            const stamp = `${hh}:${mm} local`;
-            clocks.forEach(c => c.textContent = stamp);
+            clocks.forEach(c => {
+                c.textContent = `${hh}:${mm} ${c.dataset.clockLabel || 'local'}`;
+            });
         };
         tick();
         setInterval(tick, 15000);
@@ -238,6 +239,19 @@
             update();
         }
     }
+
+    // ---------------- Theme toggle ----------------
+    // Initial theme is applied by an inline script in <head>.
+    document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const root = document.documentElement;
+            const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            root.setAttribute('data-theme', next);
+            try { localStorage.setItem('theme', next); } catch (e) { /* private mode */ }
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', next === 'light' ? '#f6f8fa' : '#0b0e14');
+        });
+    });
 
     // ---------------- Mobile nav toggle ----------------
     const toggle = document.querySelector('.nav-toggle');

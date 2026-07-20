@@ -32,4 +32,10 @@ export interface BlogPost {
 }
 export interface AdminAccount { id: number; username: string; passwordHash: string }
 // Hono context variables set by global middleware
-export type Vars = { owner: SiteProfile; currentYear: number; csrf?: string }
+export type Vars = {
+  owner: SiteProfile
+  currentYear: number
+  csrf?: string
+  lang: 'en' | 'ru'
+  t: (key: string, ...args: (string | number)[]) => string
+}
