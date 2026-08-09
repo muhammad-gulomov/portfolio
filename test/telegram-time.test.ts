@@ -3,6 +3,7 @@ import {
   CRON_EVENING,
   CRON_MORNING,
   dateInGmtPlus5,
+  formatHumanDate,
   nextDateGmtPlus5,
   previousDateGmtPlus5,
 } from '../src/telegram/time'
@@ -22,6 +23,13 @@ describe('telegram time', () => {
 
   it('nextDateGmtPlus5 adds one civil day', () => {
     expect(nextDateGmtPlus5('2026-08-09')).toBe('2026-08-10')
+  })
+
+  it('formatHumanDate uses ordinal day and month name', () => {
+    expect(formatHumanDate('2026-08-10')).toBe('10th August 2026')
+    expect(formatHumanDate('2026-08-01')).toBe('1st August 2026')
+    expect(formatHumanDate('2026-08-22')).toBe('22nd August 2026')
+    expect(formatHumanDate('2026-08-23')).toBe('23rd August 2026')
   })
 
   it('cron expressions match 08:00 and 20:00 GMT+5', () => {

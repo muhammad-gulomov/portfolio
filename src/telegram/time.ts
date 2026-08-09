@@ -34,5 +34,36 @@ export function isDateBefore(a: string, b: string): boolean {
   return a < b
 }
 
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+
+function ordinal(day: number): string {
+  const j = day % 10
+  const k = day % 100
+  if (j === 1 && k !== 11) return `${day}st`
+  if (j === 2 && k !== 12) return `${day}nd`
+  if (j === 3 && k !== 13) return `${day}rd`
+  return `${day}th`
+}
+
+/** Format YYYY-MM-DD as "10th August 2026". */
+export function formatHumanDate(dayDate: string): string {
+  const [y, m, d] = dayDate.split('-').map(Number)
+  if (!y || !m || !d) return dayDate
+  return `${ordinal(d)} ${MONTHS[m - 1]} ${y}`
+}
+
 export const CRON_MORNING = '0 3 * * *' // 08:00 GMT+5
 export const CRON_EVENING = '0 15 * * *' // 20:00 GMT+5
