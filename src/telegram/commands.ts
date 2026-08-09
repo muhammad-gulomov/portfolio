@@ -154,6 +154,10 @@ export async function handleCommand(
   }
 
   switch (parsed.cmd) {
+    case 'start': {
+      await reply('build by @thekanzen')
+      return
+    }
     case 'bind': {
       if (message.chat.type !== 'group' && message.chat.type !== 'supergroup') {
         await reply('Run /bind inside the cleaning group.')
