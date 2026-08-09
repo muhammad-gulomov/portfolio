@@ -154,31 +154,6 @@ export async function handleCommand(
   }
 
   switch (parsed.cmd) {
-    case 'join': {
-      const group = await db.getGroup(database)
-      if (!group || group.chat_id !== chatId) {
-        await reply('This chat is not the bound cleaning group.')
-        return
-      }
-      const member = await db.addMember(
-        database,
-        from.id,
-        displayName(from),
-        from.username ?? null,
-      )
-      await reply(`${db.mention(member)} joined the cleaning rotation.`)
-      return
-    }
-    case 'leave': {
-      const group = await db.getGroup(database)
-      if (!group || group.chat_id !== chatId) {
-        await reply('This chat is not the bound cleaning group.')
-        return
-      }
-      const ok = await db.deactivateMember(database, from.id)
-      await reply(ok ? 'You left the cleaning rotation.' : 'You were not in the rotation.')
-      return
-    }
     case 'bind': {
       if (message.chat.type !== 'group' && message.chat.type !== 'supergroup') {
         await reply('Run /bind inside the cleaning group.')
@@ -188,7 +163,7 @@ export async function handleCommand(
       await db.bindGroup(database, chatId, new Date().toISOString(), startsOn)
       await reply(
         `Group bound. Rotation starts ${startsOn} (GMT+5).\n` +
-          'Add people with /add (reply), or ask them to /join.',
+          'Add people by replying to their message with /add.',
       )
       return
     }
@@ -208,8 +183,7 @@ export async function handleCommand(
         await reply(
           'Usage:\n' +
             '• Reply to someone with /add\n' +
-            '• Or ask them to send /join\n' +
-            '• @username only works after the bot has seen that user',
+            '• Or /add @user / numeric id (works after the bot has seen them)',
         )
         return
       }
@@ -229,7 +203,7 @@ export async function handleCommand(
       if (unresolved.length) {
         body +=
           `\nCould not resolve: ${unresolved.join(', ')}.\n` +
-          'Easiest: ask them to send /join — or reply to their message with /add.'
+          'Reply to one of their messages with /add.'
       }
       await reply(body)
       return

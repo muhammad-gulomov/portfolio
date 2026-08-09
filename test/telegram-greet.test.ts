@@ -9,13 +9,18 @@ import {
 describe('mention greeting', () => {
   beforeEach(() => clearBotIdentityCache())
 
-  it('formats greeting with username', () => {
-    expect(greetText({ id: 1, username: 'bob', first_name: 'Bob' })).toBe('wassup nigga, @bob')
+  it('formats greeting with username and commands after a blank line', () => {
+    const text = greetText({ id: 1, username: 'bob', first_name: 'Bob' })
+    expect(text.startsWith('wassup nigga, @bob\n\n')).toBe(true)
+    expect(text).toContain('/list')
+    expect(text).toContain('/add')
+    expect(text).not.toContain('/join')
+    expect(text).not.toContain('/leave')
   })
 
   it('falls back to display name without username', () => {
     expect(userHandle({ id: 2, first_name: 'Alice' })).toBe('Alice')
-    expect(greetText({ id: 2, first_name: 'Alice' })).toBe('wassup nigga, Alice')
+    expect(greetText({ id: 2, first_name: 'Alice' }).startsWith('wassup nigga, Alice\n\n')).toBe(true)
   })
 
   it('detects @bot mention entity', () => {

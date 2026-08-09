@@ -1,5 +1,6 @@
 import type { TelegramApi } from './api'
 import type { TgMessage, TgUser } from './commands'
+import { COMMANDS_HELP } from './help'
 
 export type MessageEntity = {
   type: string
@@ -29,7 +30,7 @@ export function userHandle(user: TgUser): string {
 }
 
 export function greetText(user: TgUser): string {
-  return `wassup nigga, ${userHandle(user)}`
+  return `wassup nigga, ${userHandle(user)}\n\n${COMMANDS_HELP}`
 }
 
 export function messageMentionsBot(
