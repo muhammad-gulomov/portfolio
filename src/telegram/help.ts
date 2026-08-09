@@ -2,7 +2,6 @@
 export const COMMANDS_HELP = `Commands:
 /list — show the rotation
 /who — who's on duty
-/start — built by @thekanzen
 
 Admin:
 /bind — bind this group

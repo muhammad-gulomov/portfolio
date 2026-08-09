@@ -14,6 +14,7 @@ describe('mention greeting', () => {
     expect(text.startsWith('wassup nigga, @bob\n\n')).toBe(true)
     expect(text).toContain('/list')
     expect(text).toContain('/add')
+    expect(text).not.toContain('/start')
     expect(text).not.toContain('/join')
     expect(text).not.toContain('/leave')
   })
