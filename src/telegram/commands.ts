@@ -14,6 +14,7 @@ export type TgMessage = {
   chat: { id: number; type: string }
   from?: TgUser
   text?: string
+  entities?: { type: string; offset: number; length: number; user?: TgUser }[]
   reply_to_message?: { from?: TgUser }
 }
 

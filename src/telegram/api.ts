@@ -9,6 +9,7 @@ export type ChatMemberStatus =
   | 'kicked'
 
 export type TelegramApi = {
+  getMe(): Promise<{ id: number; username?: string; first_name: string }>
   sendMessage(
     chatId: number,
     text: string,
@@ -41,6 +42,9 @@ export function createTelegramApi(token: string, fetchFn: typeof fetch = fetch):
   }
 
   return {
+    getMe() {
+      return call('getMe', {})
+    },
     sendMessage(chatId, text, opts) {
       return call('sendMessage', {
         chat_id: chatId,

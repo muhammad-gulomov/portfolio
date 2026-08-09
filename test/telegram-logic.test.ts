@@ -21,6 +21,9 @@ function mockApi(overrides: Partial<TelegramApi> = {}): TelegramApi & {
     sent,
     edited,
     answers,
+    async getMe() {
+      return { id: 99, username: 'CleanBot', first_name: 'CleanBot' }
+    },
     async sendMessage(chatId, text) {
       sent.push({ chatId, text })
       messageId += 1
