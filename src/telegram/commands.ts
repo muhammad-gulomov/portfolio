@@ -148,12 +148,37 @@ export async function handleCommand(
 
   const reply = (body: string) => api.sendMessage(chatId, body)
 
-  if (!isAdmin && ['bind', 'add', 'remove', 'list', 'who'].includes(parsed.cmd)) {
+  if (!isAdmin && ['bind', 'add', 'remove'].includes(parsed.cmd)) {
     await reply('Admin only.')
     return
   }
 
   switch (parsed.cmd) {
+    case 'join': {
+      const group = await db.getGroup(database)
+      if (!group || group.chat_id !== chatId) {
+        await reply('This chat is not the bound cleaning group.')
+        return
+      }
+      const member = await db.addMember(
+        database,
+        from.id,
+        displayName(from),
+        from.username ?? null,
+      )
+      await reply(`${db.mention(member)} joined the cleaning rotation.`)
+      return
+    }
+    case 'leave': {
+      const group = await db.getGroup(database)
+      if (!group || group.chat_id !== chatId) {
+        await reply('This chat is not the bound cleaning group.')
+        return
+      }
+      const ok = await db.deactivateMember(database, from.id)
+      await reply(ok ? 'You left the cleaning rotation.' : 'You were not in the rotation.')
+      return
+    }
     case 'bind': {
       if (message.chat.type !== 'group' && message.chat.type !== 'supergroup') {
         await reply('Run /bind inside the cleaning group.')
@@ -179,9 +204,10 @@ export async function handleCommand(
       const { targets, unresolved } = await resolveTargets(database, api, message, parsed.args)
       if (targets.length === 0) {
         await reply(
-          'Usage: /add @user1 @user2 …\n' +
-            'Or reply to someone with /add.\n' +
-            'If a @username fails, reply to one of their messages with /add (bot must have seen them).',
+          'Usage:\n' +
+            '• Reply to someone with /add\n' +
+            '• Or ask them to send /join\n' +
+            '• @username only works after the bot has seen that user',
         )
         return
       }
@@ -201,7 +227,7 @@ export async function handleCommand(
       if (unresolved.length) {
         body +=
           `\nCould not resolve: ${unresolved.join(', ')}.\n` +
-          'Have them send any message (or reply to one of their messages with /add).'
+          'Easiest: ask them to send /join — or reply to their message with /add.'
       }
       await reply(body)
       return
