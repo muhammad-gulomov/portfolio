@@ -9,6 +9,9 @@ declare global {
       ASSETS: Fetcher
       SESSION_SECRET: string
       ADMIN_BOOTSTRAP_PASSWORD: string
+      TELEGRAM_BOT_TOKEN?: string
+      TELEGRAM_WEBHOOK_SECRET?: string
+      TELEGRAM_ADMIN_IDS?: string
     }
   }
 }

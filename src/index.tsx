@@ -8,11 +8,17 @@ import blogRoutes from './routes/blog'
 import mediaRoutes from './routes/media'
 import authRoutes from './routes/auth'
 import adminRoutes from './routes/admin'
+import telegramRoutes from './routes/telegram'
 import { ensureAdmin } from './bootstrap'
 import { localeMiddleware } from './i18n/locale'
+import { handleScheduled } from './telegram/scheduled'
 
 
 const app = new Hono<{ Bindings: Env; Variables: Vars }>()
+
+function isBarePath(path: string): boolean {
+  return path === '/healthz' || path.startsWith('/telegram')
+}
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 
@@ -30,15 +36,19 @@ app.use('*', async (c, next) => {
 
 // ── Global middleware ─────────────────────────────────────────────────────────
 
-// 1. jsxRenderer with root layout (must come before any c.render() call)
-app.use('*', Layout)
-
-// 2. Locale (?lang= + cookie) before any render
-app.use('*', localeMiddleware)
-
-// 3. Inject owner + currentYear into every request context (skip health check)
+// Skip HTML layout / locale / owner for health + Telegram webhook.
 app.use('*', async (c, next) => {
-  if (c.req.path === '/healthz') return next()
+  if (isBarePath(c.req.path)) return next()
+  return Layout(c, next)
+})
+
+app.use('*', async (c, next) => {
+  if (isBarePath(c.req.path)) return next()
+  return localeMiddleware(c, next)
+})
+
+app.use('*', async (c, next) => {
+  if (isBarePath(c.req.path)) return next()
   c.set('currentYear', new Date().getFullYear())
   c.set('owner', (await getProfile(c.env.DB)) ?? SEED_OWNER)
   await next()
@@ -51,10 +61,16 @@ app.get('/healthz', async (c) => {
   catch { return c.text('db unavailable', 503) }
 })
 
+app.route('/', telegramRoutes)
 app.route('/', authRoutes)
 app.route('/', adminRoutes)
 app.route('/', publicRoutes)
 app.route('/', blogRoutes)
 app.route('/', mediaRoutes)
 
-export default app
+export default {
+  fetch: app.fetch.bind(app),
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+    ctx.waitUntil(handleScheduled(event, env))
+  },
+}

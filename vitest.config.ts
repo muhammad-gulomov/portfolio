@@ -8,7 +8,16 @@ export default defineConfig({
       const migrations = await readD1Migrations(path.join(__dirname, 'migrations'))
       return {
         wrangler: { configPath: './wrangler.jsonc' },
-        miniflare: { d1Databases: ['DB'], r2Buckets: ['BUCKET'], bindings: { TEST_MIGRATIONS: migrations } },
+        miniflare: {
+          d1Databases: ['DB'],
+          r2Buckets: ['BUCKET'],
+          bindings: {
+            TEST_MIGRATIONS: migrations,
+            TELEGRAM_BOT_TOKEN: 'test-bot-token',
+            TELEGRAM_WEBHOOK_SECRET: 'test-webhook-secret',
+            TELEGRAM_ADMIN_IDS: '111',
+          },
+        },
       }
     }),
   ],
