@@ -155,7 +155,7 @@ export async function handleCommand(
 
   switch (parsed.cmd) {
     case 'start': {
-      await reply('build by @thekanzen')
+      await reply('built by @thekanzen')
       return
     }
     case 'bind': {
