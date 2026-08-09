@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { CRON_EVENING, CRON_MORNING, dateInGmtPlus5, previousDateGmtPlus5 } from '../src/telegram/time'
+import {
+  CRON_EVENING,
+  CRON_MORNING,
+  dateInGmtPlus5,
+  nextDateGmtPlus5,
+  previousDateGmtPlus5,
+} from '../src/telegram/time'
 
 describe('telegram time', () => {
   it('maps known UTC instants to GMT+5 calendar dates', () => {
@@ -12,6 +18,10 @@ describe('telegram time', () => {
   it('previousDateGmtPlus5 subtracts one civil day', () => {
     expect(previousDateGmtPlus5('2026-08-09')).toBe('2026-08-08')
     expect(previousDateGmtPlus5('2026-03-01')).toBe('2026-02-28')
+  })
+
+  it('nextDateGmtPlus5 adds one civil day', () => {
+    expect(nextDateGmtPlus5('2026-08-09')).toBe('2026-08-10')
   })
 
   it('cron expressions match 08:00 and 20:00 GMT+5', () => {

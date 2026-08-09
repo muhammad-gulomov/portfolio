@@ -3,6 +3,7 @@ export type CleaningGroup = {
   chat_id: number
   current_member_id: number | null
   bound_at: string
+  starts_on: string | null
 }
 
 export type CleaningMember = {
@@ -29,15 +30,27 @@ export async function getGroup(db: D1Database): Promise<CleaningGroup | null> {
   return db.prepare('SELECT * FROM cleaning_group WHERE id = 1').first<CleaningGroup>()
 }
 
-export async function bindGroup(db: D1Database, chatId: number, boundAt: string): Promise<void> {
+export async function bindGroup(
+  db: D1Database,
+  chatId: number,
+  boundAt: string,
+  startsOn: string,
+): Promise<void> {
   await db
     .prepare(
-      `INSERT INTO cleaning_group (id, chat_id, current_member_id, bound_at)
-       VALUES (1, ?, NULL, ?)
-       ON CONFLICT(id) DO UPDATE SET chat_id = excluded.chat_id, bound_at = excluded.bound_at`,
+      `INSERT INTO cleaning_group (id, chat_id, current_member_id, bound_at, starts_on)
+       VALUES (1, ?, NULL, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET
+         chat_id = excluded.chat_id,
+         bound_at = excluded.bound_at,
+         starts_on = excluded.starts_on`,
     )
-    .bind(chatId, boundAt)
+    .bind(chatId, boundAt, startsOn)
     .run()
+}
+
+export async function setStartsOn(db: D1Database, startsOn: string): Promise<void> {
+  await db.prepare('UPDATE cleaning_group SET starts_on = ? WHERE id = 1').bind(startsOn).run()
 }
 
 export async function setCurrentMember(db: D1Database, telegramUserId: number | null): Promise<void> {

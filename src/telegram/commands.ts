@@ -1,6 +1,6 @@
 import type { TelegramApi } from './api'
 import * as db from './db'
-import { dateInGmtPlus5 } from './time'
+import { dateInGmtPlus5, nextDateGmtPlus5 } from './time'
 
 export type TgUser = {
   id: number
@@ -184,9 +184,11 @@ export async function handleCommand(
         await reply('Run /bind inside the cleaning group.')
         return
       }
-      await db.bindGroup(database, chatId, new Date().toISOString())
+      const startsOn = nextDateGmtPlus5(dateInGmtPlus5())
+      await db.bindGroup(database, chatId, new Date().toISOString(), startsOn)
       await reply(
-        'Group bound. Add people with /add @username (one or many), or reply to someone with /add.',
+        `Group bound. Rotation starts ${startsOn} (GMT+5).\n` +
+          'Add people with /add (reply), or ask them to /join.',
       )
       return
     }
@@ -274,6 +276,13 @@ export async function handleCommand(
         return
       }
       const today = dateInGmtPlus5()
+      if (group.starts_on && today < group.starts_on) {
+        const dutyId = group.current_member_id
+        const duty = dutyId != null ? await db.getMemberByTelegramId(database, dutyId) : null
+        const label = duty ? db.mention(duty) : 'not set yet'
+        await reply(`Rotation starts ${group.starts_on} (GMT+5). First up: ${label}.`)
+        return
+      }
       const day = await db.getDayByDate(database, today)
       const dutyId = day?.duty_user_id ?? group.current_member_id
       if (dutyId == null) {

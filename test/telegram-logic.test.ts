@@ -52,8 +52,8 @@ async function resetCleaningTables() {
   await database.prepare('DELETE FROM cleaning_group').run()
 }
 
-async function seedRotation() {
-  await db.bindGroup(database, -100, '2026-08-09T00:00:00.000Z')
+async function seedRotation(startsOn = '2026-08-09') {
+  await db.bindGroup(database, -100, '2026-08-09T00:00:00.000Z', startsOn)
   await db.addMember(database, 1, 'Alice', 'alice')
   await db.addMember(database, 2, 'Bob', 'bob')
   await db.addMember(database, 3, 'Carol', 'carol')
@@ -144,6 +144,16 @@ describe('cleaning bot logic', () => {
     const today = await db.getDayByDate(database, '2026-08-10')
     expect(today?.duty_user_id).toBe(1)
     expect(api.sent.at(-1)?.text).toMatch(/Same turn today: @alice/)
+  })
+
+  it('skips morning and evening before starts_on', async () => {
+    await resetCleaningTables()
+    await seedRotation('2026-08-10')
+    const api = mockApi()
+    await runMorning(database, api, new Date('2026-08-09T03:00:00.000Z'))
+    await runEvening(database, api, new Date('2026-08-09T15:00:00.000Z'))
+    expect(api.sent).toHaveLength(0)
+    expect(await db.getDayByDate(database, '2026-08-09')).toBeNull()
   })
 
   it('rejects non-rotation voters and left members', async () => {

@@ -8,16 +8,30 @@ export function dateInGmtPlus5(now: Date = new Date()): string {
   }).format(now)
 }
 
-/** Previous calendar day YYYY-MM-DD in GMT+5. */
-export function previousDateGmtPlus5(dayDate: string): string {
+function shiftCivilDate(dayDate: string, deltaDays: number): string {
   const [y, m, d] = dayDate.split('-').map(Number)
   // Noon UTC avoids edge ambiguity; we only need day arithmetic on the date string.
   const utc = new Date(Date.UTC(y, m - 1, d, 12, 0, 0))
-  utc.setUTCDate(utc.getUTCDate() - 1)
+  utc.setUTCDate(utc.getUTCDate() + deltaDays)
   const yy = utc.getUTCFullYear()
   const mm = String(utc.getUTCMonth() + 1).padStart(2, '0')
   const dd = String(utc.getUTCDate()).padStart(2, '0')
   return `${yy}-${mm}-${dd}`
+}
+
+/** Previous calendar day YYYY-MM-DD in GMT+5. */
+export function previousDateGmtPlus5(dayDate: string): string {
+  return shiftCivilDate(dayDate, -1)
+}
+
+/** Next calendar day YYYY-MM-DD. */
+export function nextDateGmtPlus5(dayDate: string): string {
+  return shiftCivilDate(dayDate, 1)
+}
+
+/** True if a YYYY-MM-DD is strictly before another. */
+export function isDateBefore(a: string, b: string): boolean {
+  return a < b
 }
 
 export const CRON_MORNING = '0 3 * * *' // 08:00 GMT+5

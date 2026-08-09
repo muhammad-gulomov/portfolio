@@ -1,7 +1,7 @@
 import type { TelegramApi } from './api'
 import { isActiveChatMember } from './api'
 import * as db from './db'
-import { dateInGmtPlus5, previousDateGmtPlus5 } from './time'
+import { dateInGmtPlus5, isDateBefore, previousDateGmtPlus5 } from './time'
 
 const OK_THRESHOLD = 3
 
@@ -25,6 +25,8 @@ export async function runMorning(database: D1Database, api: TelegramApi, now: Da
   if (!group) return
 
   const today = dateInGmtPlus5(now)
+  if (group.starts_on && isDateBefore(today, group.starts_on)) return
+
   const yesterday = previousDateGmtPlus5(today)
 
   const yDay = await db.getDayByDate(database, yesterday)
@@ -74,6 +76,8 @@ export async function runEvening(database: D1Database, api: TelegramApi, now: Da
   if (!group) return
 
   const today = dateInGmtPlus5(now)
+  if (group.starts_on && isDateBefore(today, group.starts_on)) return
+
   let todayDay = await db.getDayByDate(database, today)
   if (!todayDay) {
     // Morning cron missed — create day now.
