@@ -1,9 +1,14 @@
 import type { TelegramApi } from './api'
 import { isActiveChatMember } from './api'
+import { OK_THRESHOLD } from './constants'
+import {
+  eveningPassedMessage,
+  eveningVoteMessage,
+  morningDutyMessage,
+  tagMember,
+} from './copy'
 import * as db from './db'
 import { dateInGmtPlus5, isDateBefore, previousDateGmtPlus5 } from './time'
-
-const OK_THRESHOLD = 3
 
 export type VoteRejectReason =
   | 'no_day'
@@ -43,7 +48,10 @@ export async function runMorning(database: D1Database, api: TelegramApi, now: Da
   if (!todayDay) {
     const members = await db.listActiveMembers(database)
     if (members.length === 0) {
-      await api.sendMessage(group.chat_id, 'No cleaning rotation members yet. An admin should /add people.')
+      await api.sendMessage(
+        group.chat_id,
+        'No cleaning rotation members yet. An admin should reply to someone with /add.',
+      )
       return
     }
     let dutyId = group.current_member_id
@@ -55,20 +63,9 @@ export async function runMorning(database: D1Database, api: TelegramApi, now: Da
   }
 
   const duty = await db.getMemberByTelegramId(database, todayDay.duty_user_id)
-  const label = duty ? db.mention(duty) : `user ${todayDay.duty_user_id}`
-  if (yesterdayFailed) {
-    await api.sendMessage(
-      group.chat_id,
-      `Good morning. Yesterday was not confirmed (need ${OK_THRESHOLD} OK votes). Same turn today: ${label}.`,
-    )
-  } else if (yesterdayPassed) {
-    await api.sendMessage(
-      group.chat_id,
-      `Good morning. Yesterday's cleaning was confirmed. Today's turn: ${label}.`,
-    )
-  } else {
-    await api.sendMessage(group.chat_id, `Good morning. Today's cleaning turn: ${label}.`)
-  }
+  const tag = tagMember(duty, todayDay.duty_user_id)
+  const kind = yesterdayFailed ? 'repeat' : yesterdayPassed ? 'after_pass' : 'fresh'
+  await api.sendMessage(group.chat_id, morningDutyMessage(tag, kind), { parse_mode: 'HTML' })
 }
 
 export async function runEvening(database: D1Database, api: TelegramApi, now: Date = new Date()): Promise<void> {
@@ -91,12 +88,11 @@ export async function runEvening(database: D1Database, api: TelegramApi, now: Da
   if (todayDay.status === 'voting' && todayDay.vote_message_id != null) return
 
   const duty = await db.getMemberByTelegramId(database, todayDay.duty_user_id)
-  const label = duty ? db.mention(duty) : `user ${todayDay.duty_user_id}`
-  const text =
-    `Evening check: did ${label} take out the trash today?\n` +
-    `Members (not the person on duty): press OK. Need ${OK_THRESHOLD} approvals.`
+  const tag = tagMember(duty, todayDay.duty_user_id)
+  const text = eveningVoteMessage(tag)
 
   const msg = await api.sendMessage(group.chat_id, text, {
+    parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [[{ text: 'OK', callback_data: `clean_ok:${todayDay.id}` }]],
     },
@@ -170,26 +166,26 @@ export async function handleOkVote(
 
   const count = await db.countVotes(database, day.id)
   const duty = await db.getMemberByTelegramId(database, day.duty_user_id)
-  const label = duty ? db.mention(duty) : `user ${day.duty_user_id}`
+  const tag = tagMember(duty, day.duty_user_id)
 
   if (count >= OK_THRESHOLD) {
     await db.updateDayStatus(database, day.id, 'passed')
     const next = await db.nextActiveMember(database, day.duty_user_id)
     if (next) await db.setCurrentMember(database, next.telegram_user_id)
 
-    const nextLabel = next ? db.mention(next) : 'nobody'
-    const text =
-      `Confirmed: ${label} completed the cleaning turn (${count}/${OK_THRESHOLD} OK).\n` +
-      `Next up: ${nextLabel}.`
-    await api.editMessageText(opts.chatId, opts.messageId, text)
+    const nextTag = tagMember(next, next?.telegram_user_id ?? 0)
+    await api.editMessageText(
+      opts.chatId,
+      opts.messageId,
+      eveningPassedMessage(tag, nextTag, count),
+      { parse_mode: 'HTML' },
+    )
     await api.answerCallbackQuery(opts.callbackQueryId, 'Confirmed — turn passed.')
     return { ok: true, count, passed: true }
   }
 
-  const text =
-    `Evening check: did ${label} take out the trash today?\n` +
-    `OK votes: ${count}/${OK_THRESHOLD}`
-  await api.editMessageText(opts.chatId, opts.messageId, text, {
+  await api.editMessageText(opts.chatId, opts.messageId, eveningVoteMessage(tag, count), {
+    parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [[{ text: 'OK', callback_data: `clean_ok:${day.id}` }]],
     },

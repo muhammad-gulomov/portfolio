@@ -143,7 +143,8 @@ describe('cleaning bot logic', () => {
     expect(y?.status).toBe('failed')
     const today = await db.getDayByDate(database, '2026-08-10')
     expect(today?.duty_user_id).toBe(1)
-    expect(api.sent.at(-1)?.text).toMatch(/Same turn today: @alice/)
+    expect(api.sent.at(-1)?.text).toMatch(/@alice, it is your turn to remove the trash/)
+    expect(api.sent.at(-1)?.text).toMatch(/reassigned you the same honour/)
   })
 
   it('skips morning and evening before starts_on', async () => {

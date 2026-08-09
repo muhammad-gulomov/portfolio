@@ -29,7 +29,7 @@ export type TelegramApi = {
     chatId: number,
     messageId: number,
     text: string,
-    opts?: { reply_markup?: InlineKeyboard },
+    opts?: { reply_markup?: InlineKeyboard; parse_mode?: string },
   ): Promise<void>
   answerCallbackQuery(callbackQueryId: string, text?: string): Promise<void>
   getChatMember(chatId: number, userId: number): Promise<{ status: ChatMemberStatus }>
@@ -71,6 +71,7 @@ export function createTelegramApi(token: string, fetchFn: typeof fetch = fetch):
         chat_id: chatId,
         message_id: messageId,
         text,
+        ...(opts?.parse_mode ? { parse_mode: opts.parse_mode } : {}),
         ...(opts?.reply_markup ? { reply_markup: opts.reply_markup } : {}),
       })
     },
