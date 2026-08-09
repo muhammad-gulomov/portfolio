@@ -1,7 +1,12 @@
 import { Hono } from 'hono'
 import type { Env } from '../types'
 import { createTelegramApi } from '../telegram/api'
-import { handleCommand, parseAdminIds, type TgMessage } from '../telegram/commands'
+import {
+  handleCommand,
+  parseAdminIds,
+  rememberMessageUsers,
+  type TgMessage,
+} from '../telegram/commands'
 import { handleMentionGreeting } from '../telegram/greet'
 import { handleOkVote } from '../telegram/logic'
 
@@ -59,6 +64,7 @@ telegramRoutes.post('/telegram/webhook', async (c) => {
     }
 
     if (update.message?.text) {
+      await rememberMessageUsers(c.env.DB, update.message)
       const greeted = await handleMentionGreeting(api, update.message)
       if (!greeted) {
         await handleCommand(c.env.DB, api, update.message, adminIds)

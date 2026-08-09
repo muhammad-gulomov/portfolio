@@ -41,6 +41,96 @@ export function parseAdminIds(raw: string | undefined): Set<number> {
   )
 }
 
+/** Remember speakers so later /add @username can resolve. */
+export async function rememberMessageUsers(database: D1Database, message: TgMessage): Promise<void> {
+  if (message.from) await db.rememberUser(database, message.from)
+  if (message.reply_to_message?.from) await db.rememberUser(database, message.reply_to_message.from)
+  for (const ent of message.entities ?? []) {
+    if (ent.type === 'text_mention' && ent.user) await db.rememberUser(database, ent.user)
+  }
+}
+
+async function resolveUsername(
+  database: D1Database,
+  api: TelegramApi,
+  username: string,
+): Promise<TgUser | null> {
+  const clean = username.replace(/^@/, '')
+  const known = await db.findKnownByUsername(database, clean)
+  if (known) {
+    return {
+      id: known.telegram_user_id,
+      username: known.username ?? clean,
+      first_name: known.display_name,
+    }
+  }
+  try {
+    const chat = await api.getChat(`@${clean}`)
+    if (chat.type === 'private' || chat.first_name) {
+      const user: TgUser = {
+        id: chat.id,
+        username: chat.username ?? clean,
+        first_name: chat.first_name ?? clean,
+        last_name: chat.last_name,
+      }
+      await db.rememberUser(database, user)
+      return user
+    }
+  } catch {
+    // getChat often fails for users the bot has never seen
+  }
+  return null
+}
+
+export type ResolvedTarget = { user: TgUser; label: string }
+
+/** Parse reply + @mentions + numeric ids from an /add or /remove message. */
+export async function resolveTargets(
+  database: D1Database,
+  api: TelegramApi,
+  message: TgMessage,
+  args: string,
+): Promise<{ targets: ResolvedTarget[]; unresolved: string[] }> {
+  const targets: ResolvedTarget[] = []
+  const unresolved: string[] = []
+  const seen = new Set<number>()
+
+  const push = (user: TgUser) => {
+    if (seen.has(user.id)) return
+    seen.add(user.id)
+    targets.push({ user, label: user.username ? `@${user.username}` : displayName(user) })
+  }
+
+  if (message.reply_to_message?.from) push(message.reply_to_message.from)
+
+  for (const ent of message.entities ?? []) {
+    if (ent.type === 'text_mention' && ent.user) push(ent.user)
+  }
+
+  const tokens = args.split(/\s+/).filter(Boolean)
+  for (const token of tokens) {
+    if (token.startsWith('@')) {
+      const user = await resolveUsername(database, api, token)
+      if (user) push(user)
+      else unresolved.push(token)
+      continue
+    }
+    const id = Number(token)
+    if (Number.isFinite(id) && String(id) === token) {
+      push({ id, first_name: String(id) })
+      continue
+    }
+    // bare username without @
+    if (/^[A-Za-z]\w{4,31}$/.test(token)) {
+      const user = await resolveUsername(database, api, token)
+      if (user) push(user)
+      else unresolved.push(`@${token}`)
+    }
+  }
+
+  return { targets, unresolved }
+}
+
 export async function handleCommand(
   database: D1Database,
   api: TelegramApi,
@@ -59,7 +149,6 @@ export async function handleCommand(
   const reply = (body: string) => api.sendMessage(chatId, body)
 
   if (!isAdmin && ['bind', 'add', 'remove', 'list', 'who'].includes(parsed.cmd)) {
-    // Silently ignore non-admins for unknown noise; soft reply for known admin cmds.
     await reply('Admin only.')
     return
   }
@@ -71,7 +160,9 @@ export async function handleCommand(
         return
       }
       await db.bindGroup(database, chatId, new Date().toISOString())
-      await reply('Group bound. Use /add (reply to someone) to build the rotation.')
+      await reply(
+        'Group bound. Add people with /add @username (one or many), or reply to someone with /add.',
+      )
       return
     }
     case 'add': {
@@ -85,29 +176,34 @@ export async function handleCommand(
         return
       }
 
-      let target: TgUser | null = message.reply_to_message?.from ?? null
-      let nameOverride: string | null = null
-      if (!target && parsed.args) {
-        const parts = parsed.args.split(/\s+/)
-        const id = Number(parts[0])
-        if (!Number.isFinite(id)) {
-          await reply('Usage: reply with /add, or /add <telegram_user_id> [name]')
-          return
-        }
-        target = { id, first_name: parts.slice(1).join(' ') || String(id) }
-        if (parts.length > 1) nameOverride = parts.slice(1).join(' ')
-      }
-      if (!target) {
-        await reply('Usage: reply to a member with /add, or /add <telegram_user_id> [name]')
+      const { targets, unresolved } = await resolveTargets(database, api, message, parsed.args)
+      if (targets.length === 0) {
+        await reply(
+          'Usage: /add @user1 @user2 …\n' +
+            'Or reply to someone with /add.\n' +
+            'If a @username fails, reply to one of their messages with /add (bot must have seen them).',
+        )
         return
       }
-      const member = await db.addMember(
-        database,
-        target.id,
-        nameOverride || displayName(target),
-        target.username ?? null,
-      )
-      await reply(`Added ${db.mention(member)} to the rotation.`)
+
+      const added: string[] = []
+      for (const t of targets) {
+        const member = await db.addMember(
+          database,
+          t.user.id,
+          displayName(t.user),
+          t.user.username ?? null,
+        )
+        added.push(db.mention(member))
+      }
+
+      let body = `Added: ${added.join(', ')}`
+      if (unresolved.length) {
+        body +=
+          `\nCould not resolve: ${unresolved.join(', ')}.\n` +
+          'Have them send any message (or reply to one of their messages with /add).'
+      }
+      await reply(body)
       return
     }
     case 'remove': {
@@ -116,17 +212,19 @@ export async function handleCommand(
         await reply('This chat is not the bound cleaning group.')
         return
       }
-      let userId: number | null = message.reply_to_message?.from?.id ?? null
-      if (userId == null && parsed.args) {
-        const id = Number(parsed.args.split(/\s+/)[0])
-        if (Number.isFinite(id)) userId = id
-      }
-      if (userId == null) {
-        await reply('Usage: reply with /remove, or /remove <telegram_user_id>')
+      const { targets, unresolved } = await resolveTargets(database, api, message, parsed.args)
+      if (targets.length === 0) {
+        await reply('Usage: /remove @user, or reply with /remove.')
         return
       }
-      const ok = await db.deactivateMember(database, userId)
-      await reply(ok ? 'Removed from the rotation.' : 'That user is not in the rotation.')
+      const results: string[] = []
+      for (const t of targets) {
+        const ok = await db.deactivateMember(database, t.user.id)
+        results.push(ok ? `removed ${t.label}` : `${t.label} not in rotation`)
+      }
+      let body = results.join('\n')
+      if (unresolved.length) body += `\nCould not resolve: ${unresolved.join(', ')}`
+      await reply(body)
       return
     }
     case 'list': {

@@ -218,3 +218,46 @@ export function mention(member: CleaningMember): string {
   if (member.username) return `@${member.username}`
   return member.display_name
 }
+
+export type KnownUser = {
+  telegram_user_id: number
+  username: string | null
+  display_name: string
+  seen_at: string
+}
+
+export async function rememberUser(
+  db: D1Database,
+  user: { id: number; username?: string; first_name?: string; last_name?: string },
+): Promise<void> {
+  const display =
+    [user.first_name, user.last_name].filter(Boolean).join(' ') ||
+    user.username ||
+    String(user.id)
+  await db
+    .prepare(
+      `INSERT INTO cleaning_known_users (telegram_user_id, username, display_name, seen_at)
+       VALUES (?, ?, ?, ?)
+       ON CONFLICT(telegram_user_id) DO UPDATE SET
+         username = excluded.username,
+         display_name = excluded.display_name,
+         seen_at = excluded.seen_at`,
+    )
+    .bind(user.id, user.username ?? null, display, new Date().toISOString())
+    .run()
+}
+
+export async function findKnownByUsername(
+  db: D1Database,
+  username: string,
+): Promise<KnownUser | null> {
+  const clean = username.replace(/^@/, '').toLowerCase()
+  return db
+    .prepare(
+      `SELECT * FROM cleaning_known_users
+       WHERE username IS NOT NULL AND lower(username) = ?
+       LIMIT 1`,
+    )
+    .bind(clean)
+    .first<KnownUser>()
+}
