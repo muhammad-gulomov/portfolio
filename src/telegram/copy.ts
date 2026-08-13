@@ -51,3 +51,11 @@ export function eveningPassedMessage(tag: string, nextTag: string, count: number
     `Next nominee: ${nextTag}. Try not to disappoint the bin.`
   )
 }
+
+export function adminPassMessage(prevTag: string, nextTag: string): string {
+  return (
+    `Admin override: ${prevTag} is credited — turn closed without the OK vote.\n` +
+    `${nextTag}, it is your turn to remove the trash from the kitchen, nigga.\n` +
+    `Fresh assignment for today. The bin awaits your professionalism.`
+  )
+}

@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import type { Env } from '../src/types'
 import type { TelegramApi } from '../src/telegram/api'
 import * as db from '../src/telegram/db'
-import { handleOkVote, runEvening, runMorning } from '../src/telegram/logic'
+import { handleOkVote, manualPassToday, runEvening, runMorning } from '../src/telegram/logic'
 
 const typedEnv = env as unknown as Env
 const database = typedEnv.DB
@@ -145,6 +145,29 @@ describe('cleaning bot logic', () => {
     expect(today?.duty_user_id).toBe(1)
     expect(api.sent.at(-1)?.text).toMatch(/@alice, it is your turn to remove the trash/)
     expect(api.sent.at(-1)?.text).toMatch(/reassigned you the same honour/)
+  })
+
+  it('admin /pass credits repeat duty and gives today to the next person', async () => {
+    const api = mockApi()
+    await runMorning(database, api, new Date('2026-08-09T03:00:00.000Z'))
+    await runEvening(database, api, new Date('2026-08-09T15:00:00.000Z'))
+    // No OKs — morning repeats Alice
+    await runMorning(database, api, new Date('2026-08-10T03:00:00.000Z'))
+    let today = await db.getDayByDate(database, '2026-08-10')
+    expect(today?.duty_user_id).toBe(1)
+
+    const result = await manualPassToday(database, api, new Date('2026-08-10T08:00:00.000Z'))
+    expect(result).toEqual({ ok: true })
+
+    const yesterday = await db.getDayByDate(database, '2026-08-09')
+    expect(yesterday?.status).toBe('passed')
+    today = await db.getDayByDate(database, '2026-08-10')
+    expect(today?.duty_user_id).toBe(2)
+    expect(today?.status).toBe('pending')
+    const group = await db.getGroup(database)
+    expect(group?.current_member_id).toBe(2)
+    expect(api.sent.at(-1)?.text).toMatch(/Admin override/)
+    expect(api.sent.at(-1)?.text).toMatch(/@bob/)
   })
 
   it('skips morning and evening before starts_on', async () => {

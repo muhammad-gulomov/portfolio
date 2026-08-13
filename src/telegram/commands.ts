@@ -1,5 +1,6 @@
 import type { TelegramApi } from './api'
 import * as db from './db'
+import { manualPassToday } from './logic'
 import { dateInGmtPlus5, formatHumanDate, nextDateGmtPlus5 } from './time'
 
 export type TgUser = {
@@ -148,7 +149,7 @@ export async function handleCommand(
 
   const reply = (body: string) => api.sendMessage(chatId, body)
 
-  if (!isAdmin && ['bind', 'add', 'remove'].includes(parsed.cmd)) {
+  if (!isAdmin && ['bind', 'add', 'remove', 'pass', 'skip'].includes(parsed.cmd)) {
     await reply('Admin only.')
     return
   }
@@ -231,6 +232,17 @@ export async function handleCommand(
       let body = results.join('\n')
       if (unresolved.length) body += `\nCould not resolve: ${unresolved.join(', ')}`
       await reply(body)
+      return
+    }
+    case 'pass':
+    case 'skip': {
+      const group = await db.getGroup(database)
+      if (!group || group.chat_id !== chatId) {
+        await reply('This chat is not the bound cleaning group.')
+        return
+      }
+      const result = await manualPassToday(database, api)
+      if (!result.ok) await reply(result.error)
       return
     }
     case 'list': {

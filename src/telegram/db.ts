@@ -194,6 +194,27 @@ export async function updateDayStatus(
   }
 }
 
+export async function clearVotes(db: D1Database, dayId: number): Promise<void> {
+  await db.prepare('DELETE FROM cleaning_votes WHERE day_id = ?').bind(dayId).run()
+}
+
+/** Reassign today's row to a new duty holder and reopen as pending. */
+export async function reassignDay(
+  db: D1Database,
+  dayId: number,
+  dutyUserId: number,
+): Promise<void> {
+  await clearVotes(db, dayId)
+  await db
+    .prepare(
+      `UPDATE cleaning_days
+       SET duty_user_id = ?, status = 'pending', vote_message_id = NULL
+       WHERE id = ?`,
+    )
+    .bind(dutyUserId, dayId)
+    .run()
+}
+
 export async function countVotes(db: D1Database, dayId: number): Promise<number> {
   const row = await db
     .prepare('SELECT COUNT(*) AS c FROM cleaning_votes WHERE day_id = ?')

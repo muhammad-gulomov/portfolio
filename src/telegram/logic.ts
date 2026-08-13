@@ -2,6 +2,7 @@ import type { TelegramApi } from './api'
 import { isActiveChatMember } from './api'
 import { OK_THRESHOLD } from './constants'
 import {
+  adminPassMessage,
   eveningPassedMessage,
   eveningVoteMessage,
   morningDutyMessage,
@@ -192,6 +193,56 @@ export async function handleOkVote(
   })
   await api.answerCallbackQuery(opts.callbackQueryId, `Recorded (${count}/${OK_THRESHOLD}).`)
   return { ok: true, count, passed: false }
+}
+
+/**
+ * Admin: credit today's (or current) duty holder and reassign today to the next person.
+ * Also marks yesterday passed if it was still open/failed for that same person.
+ */
+export async function manualPassToday(
+  database: D1Database,
+  api: TelegramApi,
+  now: Date = new Date(),
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const group = await db.getGroup(database)
+  if (!group) return { ok: false, error: 'No group bound.' }
+
+  const members = await db.listActiveMembers(database)
+  if (members.length === 0) return { ok: false, error: 'Rotation is empty.' }
+
+  const today = dateInGmtPlus5(now)
+  let todayDay = await db.getDayByDate(database, today)
+  const prevId =
+    todayDay?.duty_user_id ?? group.current_member_id ?? members[0].telegram_user_id
+
+  const next = await db.nextActiveMember(database, prevId)
+  if (!next) return { ok: false, error: 'No next member in the rotation.' }
+  if (next.telegram_user_id === prevId) {
+    return { ok: false, error: 'Need at least two people in the rotation to pass the turn.' }
+  }
+
+  const yesterday = previousDateGmtPlus5(today)
+  const yDay = await db.getDayByDate(database, yesterday)
+  if (yDay && yDay.duty_user_id === prevId && yDay.status !== 'passed') {
+    await db.updateDayStatus(database, yDay.id, 'passed')
+  }
+
+  if (!todayDay) {
+    todayDay = await db.createDay(database, today, next.telegram_user_id, now.toISOString())
+  } else if (todayDay.status === 'passed' && todayDay.duty_user_id === next.telegram_user_id) {
+    return { ok: false, error: 'Today is already passed for the next person.' }
+  } else {
+    await db.reassignDay(database, todayDay.id, next.telegram_user_id)
+    todayDay = (await db.getDayById(database, todayDay.id))!
+  }
+
+  await db.setCurrentMember(database, next.telegram_user_id)
+
+  const prev = await db.getMemberByTelegramId(database, prevId)
+  const prevTag = tagMember(prev, prevId)
+  const nextTag = tagMember(next, next.telegram_user_id)
+  await api.sendMessage(group.chat_id, adminPassMessage(prevTag, nextTag), { parse_mode: 'HTML' })
+  return { ok: true }
 }
 
 export { OK_THRESHOLD }
