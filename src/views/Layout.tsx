@@ -12,7 +12,7 @@ declare module 'hono' {
   }
 }
 
-const BUILD = 'v2028g'
+const BUILD = 'v2028h'
 
 const GROUND_LIGHT = '#f3f6f4'
 const GROUND_DARK = '#000000'
@@ -127,7 +127,7 @@ export default jsxRenderer(
               a second time. */}
           <link
             rel="preload"
-            href="/fonts/plex-latin.woff2"
+            href="/fonts/figtree-latin.woff2"
             as="font"
             type="font/woff2"
             crossorigin=""
