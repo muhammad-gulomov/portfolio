@@ -30,6 +30,28 @@ export function fmtPeriod(
 
 const publicRoutes = new Hono<{ Bindings: Env; Variables: Vars }>()
 
+// One page, two languages. Small, but it is the canonical way to tell a
+// crawler which URLs exist and which are translations of each other.
+publicRoutes.get('/sitemap.xml', (c) => {
+  const site = 'https://kanzen.uz'
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>${site}/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="${site}/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="${site}/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${site}/"/>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>`
+  return c.body(xml, 200, {
+    'content-type': 'application/xml; charset=UTF-8',
+    'cache-control': 'public, max-age=3600',
+  })
+})
+
 publicRoutes.get('/blog', (c) => c.redirect('/', 302))
 publicRoutes.get('/blog/:slug', (c) => c.redirect('/', 302))
 

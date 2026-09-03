@@ -54,6 +54,19 @@ app.use('*', async (c, next) => {
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 
+// Both kanzen.uz and www.kanzen.uz are custom domains on this Worker, so
+// without this they serve identical pages at two addresses — duplicate
+// content that splits ranking signals. 301 is permanent, which is what tells
+// a crawler to transfer them to the apex.
+app.use('*', async (c, next) => {
+  const url = new URL(c.req.url)
+  if (url.hostname.startsWith('www.')) {
+    url.hostname = url.hostname.slice(4)
+    return c.redirect(url.toString(), 301)
+  }
+  return next()
+})
+
 app.get('/healthz', async (c) => {
   try { await c.env.DB.prepare('SELECT 1').first(); return c.text('ok') }
   catch { return c.text('db unavailable', 503) }

@@ -12,7 +12,7 @@ export const EN: Record<string, string> = {
   'nav.skip': 'Skip to content',
   'nav.theme': 'Switch color theme',
   'nav.lang': 'Change language',
-  'meta.fallback': 'Software engineer in Tashkent',
+  'meta.fallback': 'Lead engineer in Tashkent — backend, web, and mobile',
 
   'page.home': 'Portfolio',
   'page.blog': 'Blog',
@@ -61,7 +61,7 @@ export const RU: Record<string, string> = {
   'nav.skip': 'К основному содержанию',
   'nav.theme': 'Сменить тему',
   'nav.lang': 'Сменить язык',
-  'meta.fallback': 'Инженер-программист в Ташкенте',
+  'meta.fallback': 'Ведущий инженер в Ташкенте — бэкенд, веб и мобильные приложения',
 
   'page.home': 'Портфолио',
   'page.blog': 'Блог',

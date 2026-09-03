@@ -12,7 +12,9 @@ declare module 'hono' {
   }
 }
 
-const BUILD = 'v2028h'
+const BUILD = 'v2028j'
+
+const SITE = 'https://kanzen.uz'
 
 const GROUND_LIGHT = '#f3f6f4'
 const GROUND_DARK = '#000000'
@@ -119,6 +121,33 @@ export default jsxRenderer(
           {raw(`<script>${SCROLL_BOOT}${THEME_BOOT}</script>`)}
           <meta name="description" content={description} />
           <title>{pageTitle}</title>
+
+          {/* Canonical per language. kanzen.uz and www.kanzen.uz both resolve,
+              and ?lang=ru is a distinct URL, so without this Google sees three
+              addresses for one page and splits the ranking signals between
+              them. The Worker also 301s www -> apex, which is the stronger fix;
+              canonical covers the query-string variants. */}
+          <link rel="canonical" href={lang === 'ru' ? `${SITE}/?lang=ru` : `${SITE}/`} />
+          <link rel="alternate" hreflang="en" href={`${SITE}/`} />
+          <link rel="alternate" hreflang="ru" href={`${SITE}/?lang=ru`} />
+          <link rel="alternate" hreflang="x-default" href={`${SITE}/`} />
+
+          <meta property="og:type" content="profile" />
+          <meta property="og:site_name" content={owner?.name ?? 'Muhammad Gulomov'} />
+          <meta property="og:title" content={pageTitle} />
+          <meta property="og:description" content={description} />
+          <meta property="og:url" content={lang === 'ru' ? `${SITE}/?lang=ru` : `${SITE}/`} />
+          <meta property="og:image" content={`${SITE}/img/og.jpg`} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+          <meta property="og:image:alt" content={`${owner?.name ?? 'Muhammad Gulomov'} — ${t('meta.fallback')}`} />
+          <meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'} />
+          <meta property="og:locale:alternate" content={lang === 'ru' ? 'en_US' : 'ru_RU'} />
+
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={pageTitle} />
+          <meta name="twitter:description" content={description} />
+          <meta name="twitter:image" content={`${SITE}/img/og.jpg`} />
 
           {/* Self-hosted, so there is no third-party origin to resolve and no
               CSS round-trip standing between the browser and the font file.

@@ -56,6 +56,49 @@ function ContactLink({ c }: { c: Contact }) {
   )
 }
 
+
+/**
+ * schema.org Person for the page. This is what lets a search engine treat the
+ * page as an entity — a named person with roles at named organisations —
+ * rather than as loose text, and it is built from the same DB rows the page
+ * renders, so it cannot drift from what a reader sees.
+ *
+ * "<" is escaped because a "</script>" sequence anywhere inside the JSON would
+ * close the tag early; that is the one way JSON-LD can become an injection.
+ */
+function personJsonLd(owner: SiteProfile, work: WorkExperience[], site: string): string {
+  const sameAs = [owner.github, owner.linkedin, owner.telegram, owner.instagram]
+    .map((v) => href(v))
+    .filter((v): v is string => v !== null)
+
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: owner.name,
+    url: site,
+    image: `${site}/img/og.jpg`,
+    jobTitle: work[0]?.role ?? 'Software Engineer',
+    description: `${owner.name} — ${owner.tagline}`.trim(),
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Tashkent',
+      addressCountry: 'UZ',
+    },
+    email: owner.email?.trim() ? `mailto:${owner.email.trim()}` : undefined,
+    knowsLanguage: ['en', 'ru', 'uz'],
+    sameAs,
+    worksFor: work
+      .filter((w) => w.endDate === null)
+      .map((w) => ({
+        '@type': 'Organization',
+        name: w.company,
+        ...(href(w.url) ? { url: href(w.url) } : {}),
+      })),
+  }
+
+  return JSON.stringify(data).replace(/</g, '\\u003c')
+}
+
 export function Home({ owner, work, workPeriods, t }: HomeProps) {
   // Two groups, not one undifferentiated row: how to reach him, then where to
   // read about him — the second ordered from most professional to least.
@@ -72,6 +115,7 @@ export function Home({ owner, work, workPeriods, t }: HomeProps) {
 
   return (
     <div class="sheet">
+      {raw(`<script type="application/ld+json">${personJsonLd(owner, work, 'https://kanzen.uz')}</script>`)}
       <div class="stack">
 
         {/* Intro left, portrait right; the work ledger runs full width beneath
