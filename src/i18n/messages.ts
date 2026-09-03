@@ -23,7 +23,7 @@ export const EN: Record<string, string> = {
   // never user input. Anything that ever comes from the CMS must not be
   // rendered this way.
   'intro.p1': "I'm a lead engineer who builds products end to end — backend, web, and mobile.",
-  'intro.p2': "Currently building at <a href=\"https://yodla-app.uz\" target=\"_blank\" rel=\"noopener\">Yodla</a> (~500k users) and <a href=\"https://avtodars-avtomaktab.uz\" target=\"_blank\" rel=\"noopener\">Avtodars</a>. Previously at Tenzorsoft and PDP Academy. On the side, I'm building <a href=\"https://birga-app.uz\" target=\"_blank\" rel=\"noopener\">Birga</a>.",
+  'intro.p2': "Currently building at <a href=\"https://yodla-app.uz\" target=\"_blank\" rel=\"noopener\">Yodla</a> (~500k users) and <a href=\"https://avtodars-avtomaktab.uz\" target=\"_blank\" rel=\"noopener\">Avtodars</a>. On the side, I'm building <a href=\"https://birga-app.uz\" target=\"_blank\" rel=\"noopener\">Birga</a>.",
 
   'about.title': 'About me',
   'work.title': 'Work history',
@@ -68,7 +68,7 @@ export const RU: Record<string, string> = {
   'page.login': 'Вход',
 
   'intro.p1': 'Я ведущий инженер и делаю продукты целиком — бэкенд, веб и мобильные приложения.',
-  'intro.p2': 'Сейчас работаю в <a href="https://yodla-app.uz" target="_blank" rel="noopener">Yodla</a> (~500 тыс. пользователей) и <a href="https://avtodars-avtomaktab.uz" target="_blank" rel="noopener">Avtodars</a>. Ранее — Tenzorsoft и PDP Academy. Параллельно развиваю <a href="https://birga-app.uz" target="_blank" rel="noopener">Birga</a>.',
+  'intro.p2': 'Сейчас работаю в <a href="https://yodla-app.uz" target="_blank" rel="noopener">Yodla</a> (~500 тыс. пользователей) и <a href="https://avtodars-avtomaktab.uz" target="_blank" rel="noopener">Avtodars</a>. Параллельно развиваю <a href="https://birga-app.uz" target="_blank" rel="noopener">Birga</a>.',
 
   'about.title': 'Обо мне',
   'work.title': 'Опыт работы',
