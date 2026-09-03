@@ -22,8 +22,8 @@ export const EN: Record<string, string> = {
   // because they are compile-time constants in this file — author-controlled,
   // never user input. Anything that ever comes from the CMS must not be
   // rendered this way.
-  'intro.p1': "I'm a software engineer who builds products end to end — backend, frontend, mobile.",
-  'intro.p2': "Right now I'm the main programmer at <a href=\"https://yodla-app.uz\" target=\"_blank\" rel=\"noopener\">Yodla</a>, which reaches 500,000 users, and at <a href=\"https://avtodars-avtomaktab.uz\" target=\"_blank\" rel=\"noopener\">Avtodars</a>. On the side I'm building my own startup, <a href=\"https://birga-app.uz\" target=\"_blank\" rel=\"noopener\">Birga</a>.",
+  'intro.p1': "I'm a lead engineer who builds products end to end — backend, web, and mobile.",
+  'intro.p2': "Currently building at <a href=\"https://yodla-app.uz\" target=\"_blank\" rel=\"noopener\">Yodla</a> (~500k users) and <a href=\"https://avtodars-avtomaktab.uz\" target=\"_blank\" rel=\"noopener\">Avtodars</a>. Previously at Tenzorsoft and PDP Academy. On the side, I'm building <a href=\"https://birga-app.uz\" target=\"_blank\" rel=\"noopener\">Birga</a>.",
 
   'about.title': 'About me',
   'work.title': 'Work history',
@@ -67,8 +67,8 @@ export const RU: Record<string, string> = {
   'page.blog': 'Блог',
   'page.login': 'Вход',
 
-  'intro.p1': 'Я инженер-программист и делаю продукты целиком — бэкенд, фронтенд, мобильные приложения.',
-  'intro.p2': 'Сейчас я главный программист в <a href="https://yodla-app.uz" target="_blank" rel="noopener">Yodla</a> — 500 000 пользователей — и в <a href="https://avtodars-avtomaktab.uz" target="_blank" rel="noopener">Avtodars</a>. Параллельно развиваю свой стартап <a href="https://birga-app.uz" target="_blank" rel="noopener">Birga</a>.',
+  'intro.p1': 'Я ведущий инженер и делаю продукты целиком — бэкенд, веб и мобильные приложения.',
+  'intro.p2': 'Сейчас работаю в <a href="https://yodla-app.uz" target="_blank" rel="noopener">Yodla</a> (~500 тыс. пользователей) и <a href="https://avtodars-avtomaktab.uz" target="_blank" rel="noopener">Avtodars</a>. Ранее — Tenzorsoft и PDP Academy. Параллельно развиваю <a href="https://birga-app.uz" target="_blank" rel="noopener">Birga</a>.',
 
   'about.title': 'Обо мне',
   'work.title': 'Опыт работы',

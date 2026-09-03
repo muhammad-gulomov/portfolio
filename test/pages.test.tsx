@@ -402,6 +402,6 @@ describe('Login', () => {
     const body = await res.text()
     expect(body).toContain('action="/login"')
     expect(body).toContain('name="_csrf"')
-    expect(body).toContain('v2028d')
+    expect(body).toContain('v2028e')
   })
 })
