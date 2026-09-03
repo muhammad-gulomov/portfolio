@@ -1,4 +1,4 @@
-import type { BlogPost, WorkExperience, Project } from '../../types'
+import type { BlogPost, WorkExperience } from '../../types'
 
 // Format ISO date → "MMM d, yyyy"  (e.g. "Jan 15, 2026")
 function fmtBlogDate(iso: string): string {
@@ -15,11 +15,10 @@ function fmtMonthYear(iso: string): string {
 interface DashboardProps {
   posts: BlogPost[]
   work: WorkExperience[]
-  projects: Project[]
   csrf: string
 }
 
-export function Dashboard({ posts, work, projects, csrf }: DashboardProps) {
+export function Dashboard({ posts, work, csrf }: DashboardProps) {
   return (
     <section class="admin-shell">
       <div class="container">
@@ -29,7 +28,7 @@ export function Dashboard({ posts, work, projects, csrf }: DashboardProps) {
 
         {/* TOOLBAR */}
         <div class="admin-toolbar">
-          <a href="/admin/profile" class="btn primary">Profile &amp; settings <span class="arrow">→</span></a>
+          <a href="/admin/profile" class="btn primary">Profile &amp; settings</a>
           <a href="/" target="_blank" class="btn">View site</a>
           <form action="/logout" method="post" style="margin:0;">
             <input type="hidden" name="_csrf" value={csrf} />
@@ -43,7 +42,7 @@ export function Dashboard({ posts, work, projects, csrf }: DashboardProps) {
             <h2>Blog posts</h2>
             <div class="admin-actions">
               <span class="count">{posts.length} total</span>
-              <a href="/admin/posts/new" class="btn primary">New post <span class="arrow">→</span></a>
+              <a href="/admin/posts/new" class="btn primary">New post</a>
             </div>
           </header>
 
@@ -91,7 +90,7 @@ export function Dashboard({ posts, work, projects, csrf }: DashboardProps) {
             <h2>Work history</h2>
             <div class="admin-actions">
               <span class="count">{work.length} entries</span>
-              <a href="/admin/work/new" class="btn primary">New entry <span class="arrow">→</span></a>
+              <a href="/admin/work/new" class="btn primary">New entry</a>
             </div>
           </header>
 
@@ -131,49 +130,6 @@ export function Dashboard({ posts, work, projects, csrf }: DashboardProps) {
           </div>
         </section>
 
-        {/* PROJECTS */}
-        <section class="admin-section">
-          <header>
-            <h2>Projects</h2>
-            <div class="admin-actions">
-              <span class="count">{projects.length} projects</span>
-              <a href="/admin/projects/new" class="btn primary">New project <span class="arrow">→</span></a>
-            </div>
-          </header>
-
-          <div class="admin-list">
-            {projects.length === 0 && (
-              <div class="empty">No projects yet.</div>
-            )}
-
-            {projects.map((p) => (
-              <div key={p.id} class="row">
-                <div>
-                  <div class="title">{p.name}</div>
-                  <div class="sub-meta">
-                    <span>{p.tagline}</span>
-                    <span>· order {p.displayOrder}</span>
-                  </div>
-                </div>
-                <div class="actions">
-                  {p.url && p.url.trim() && (
-                    <a href={p.url} target="_blank">View</a>
-                  )}
-                  <a href={`/admin/projects/${p.id}/edit`}>Edit</a>
-                  <form
-                    action={`/admin/projects/${p.id}/delete`}
-                    method="post"
-                    style="display:inline"
-                    onsubmit="return confirm('Delete this project?')"
-                  >
-                    <input type="hidden" name="_csrf" value={csrf} />
-                    <button type="submit" class="danger">Delete</button>
-                  </form>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
       </div>
     </section>
   )

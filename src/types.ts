@@ -25,10 +25,6 @@ export interface WorkExperience {
   startDate: string; endDate: string | null; summary: string | null; tech: string | null
   url: string | null; projectLinks: string | null; displayOrder: number
 }
-export interface Project {
-  id: number; name: string; tagline: string | null; description: string | null; tech: string | null
-  url: string | null; githubUrl: string | null; imageUrl: string | null; displayOrder: number
-}
 export interface BlogPost {
   id: number; slug: string; title: string; excerpt: string | null; content: string
   publishedAt: string; readingMinutes: number; views: number; published: number // 0|1

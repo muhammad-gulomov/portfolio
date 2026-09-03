@@ -7,7 +7,7 @@
  * Walk:
  *  a. Bootstrap admin via ensureAdmin → exactly one account
  *  b. Seed a project, work entry, and published blog post via repos
- *  c. GET / → 200, contains seeded project name and work company
+ *  c. GET / → 200, contains seeded work company
  *  d. GET /blog → 200, lists published post title
  *  e. GET /blog/:slug twice → views incremented to 2
  *  f. GET /admin unauthenticated → 302 /login
@@ -24,7 +24,6 @@ import { SELF } from 'cloudflare:test'
 import { describe, it, expect, beforeAll } from 'vitest'
 import type { Env } from '../src/types'
 import { ensureAdmin } from '../src/bootstrap'
-import { saveProject } from '../src/db/project'
 import { saveWork } from '../src/db/work'
 import { savePost, getById, getBySlug } from '../src/db/blog'
 
@@ -120,17 +119,6 @@ describe('E2E integration — full user + admin journey', () => {
   // ── b. Seed content ─────────────────────────────────────────────────────────
 
   it('b. seed: project + work + published blog post', async () => {
-    await saveProject(db, {
-      id: 0,
-      name: 'Integration Project',
-      tagline: 'The integration project',
-      description: null,
-      tech: 'TypeScript',
-      url: null,
-      githubUrl: null,
-      imageUrl: null,
-      displayOrder: 1,
-    })
 
     await saveWork(db, {
       id: 0,
@@ -163,33 +151,27 @@ describe('E2E integration — full user + admin journey', () => {
 
   // ── c. GET / ────────────────────────────────────────────────────────────────
 
-  it('c. GET / returns 200 with seeded project name and work company', async () => {
+  it('c. GET / returns 200 with seeded work company', async () => {
     const res = await SELF.fetch('https://x/')
     expect(res.status).toBe(200)
     const body = await res.text()
-    expect(body).toContain('Integration Project')
     expect(body).toContain('Integration Corp')
+    expect(body).not.toContain('Integration Project')
   })
 
-  // ── d. GET /blog ─────────────────────────────────────────────────────────────
-
-  it('d. GET /blog returns 200 and lists the published post', async () => {
-    const res = await SELF.fetch('https://x/blog')
-    expect(res.status).toBe(200)
-    const body = await res.text()
-    expect(body).toContain('Integration Post Title')
+  it('d. GET /blog redirects to home', async () => {
+    const res = await SELF.fetch('https://x/blog', { redirect: 'manual' })
+    expect(res.status).toBe(302)
+    expect(res.headers.get('location')).toBe('/')
   })
 
-  // ── e. GET /blog/:slug × 2 → views increment ────────────────────────────────
-
-  it('e. GET /blog/integration-post twice increments views to 2', async () => {
-    await SELF.fetch('https://x/blog/integration-post')
-    const res2 = await SELF.fetch('https://x/blog/integration-post')
-    expect(res2.status).toBe(200)
+  it('e. GET /blog/:slug redirects to home without incrementing views', async () => {
+    await SELF.fetch('https://x/blog/integration-post', { redirect: 'manual' })
+    await SELF.fetch('https://x/blog/integration-post', { redirect: 'manual' })
 
     const post = await getById(db, seededPostId)
     expect(post).not.toBeNull()
-    expect(post!.views).toBe(2)
+    expect(post!.views).toBe(0)
   })
 
   // ── f. GET /admin unauthenticated → 302 ────────────────────────────────────

@@ -6,13 +6,11 @@ import { getProfile, updateProfile, setPhotoPath } from '../db/profile'
 import { getAccount, updateCredentials } from '../db/account'
 import { listAll, getById, savePost, deletePost } from '../db/blog'
 import { listWork, getWork, saveWork, deleteWork } from '../db/work'
-import { listProjects, getProject, saveProject, deleteProject } from '../db/project'
 import { putPhoto } from '../media/photo'
 import { hashPassword } from '../auth/password'
 import { Dashboard } from '../views/admin/Dashboard'
 import { PostForm } from '../views/admin/PostForm'
 import { WorkForm } from '../views/admin/WorkForm'
-import { ProjectForm } from '../views/admin/ProjectForm'
 import { ProfileForm } from '../views/admin/ProfileForm'
 import { SEED_OWNER } from '../seed-owner'
 import type { SiteProfile } from '../types'
@@ -26,13 +24,12 @@ admin.use('/admin/*', requireAuth)
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
 admin.get('/admin', async (c) => {
-  const [posts, work, projects, csrf] = await Promise.all([
+  const [posts, work, csrf] = await Promise.all([
     listAll(c.env.DB),
     listWork(c.env.DB),
-    listProjects(c.env.DB),
     issueCsrf(c, c.env.SESSION_SECRET),
   ])
-  return c.render(<Dashboard posts={posts} work={work} projects={projects} csrf={csrf} />, {
+  return c.render(<Dashboard posts={posts} work={work} csrf={csrf} />, {
     title: 'Admin',
     css: 'admin',
   })
@@ -120,46 +117,6 @@ admin.post('/admin/work/:id/delete', async (c) => {
   if (!(await verifyCsrf(c, c.env.SESSION_SECRET))) return c.redirect('/admin')
   const id = Number(c.req.param('id'))
   await deleteWork(c.env.DB, id)
-  return c.redirect('/admin')
-})
-
-// ── Projects ──────────────────────────────────────────────────────────────────
-
-admin.get('/admin/projects/new', async (c) => {
-  const csrf = await issueCsrf(c, c.env.SESSION_SECRET)
-  return c.render(<ProjectForm project={null} csrf={csrf} />, { title: 'New project', css: 'admin' })
-})
-
-admin.get('/admin/projects/:id/edit', async (c) => {
-  const id = Number(c.req.param('id'))
-  const project = await getProject(c.env.DB, id)
-  if (!project) return c.notFound()
-  const csrf = await issueCsrf(c, c.env.SESSION_SECRET)
-  return c.render(<ProjectForm project={project} csrf={csrf} />, { title: 'Edit project', css: 'admin' })
-})
-
-admin.post('/admin/projects', async (c) => {
-  if (!(await verifyCsrf(c, c.env.SESSION_SECRET))) return c.redirect('/admin')
-  const body = await c.req.parseBody()
-  const idRaw = typeof body.id === 'string' ? body.id.trim() : ''
-  await saveProject(c.env.DB, {
-    id: idRaw ? Number(idRaw) : (undefined as unknown as number),
-    name: typeof body.name === 'string' ? body.name : '',
-    tagline: typeof body.tagline === 'string' && body.tagline.trim() ? body.tagline.trim() : null,
-    description: typeof body.description === 'string' && body.description.trim() ? body.description.trim() : null,
-    tech: typeof body.tech === 'string' && body.tech.trim() ? body.tech.trim() : null,
-    url: typeof body.url === 'string' && body.url.trim() ? body.url.trim() : null,
-    githubUrl: typeof body.githubUrl === 'string' && body.githubUrl.trim() ? body.githubUrl.trim() : null,
-    imageUrl: typeof body.imageUrl === 'string' && body.imageUrl.trim() ? body.imageUrl.trim() : null,
-    displayOrder: Number(body.displayOrder) || 0,
-  })
-  return c.redirect('/admin')
-})
-
-admin.post('/admin/projects/:id/delete', async (c) => {
-  if (!(await verifyCsrf(c, c.env.SESSION_SECRET))) return c.redirect('/admin')
-  const id = Number(c.req.param('id'))
-  await deleteProject(c.env.DB, id)
   return c.redirect('/admin')
 })
 

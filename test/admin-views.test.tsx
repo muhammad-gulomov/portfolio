@@ -6,11 +6,10 @@
  */
 import { Hono } from 'hono'
 import { describe, it, expect } from 'vitest'
-import type { SiteProfile, WorkExperience, Project, BlogPost } from '../src/types'
+import type { SiteProfile, WorkExperience, BlogPost } from '../src/types'
 import { Dashboard } from '../src/views/admin/Dashboard'
 import { PostForm } from '../src/views/admin/PostForm'
 import { WorkForm } from '../src/views/admin/WorkForm'
-import { ProjectForm } from '../src/views/admin/ProjectForm'
 import { ProfileForm } from '../src/views/admin/ProfileForm'
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
@@ -71,19 +70,6 @@ const work: WorkExperience[] = [
   },
 ]
 
-const projects: Project[] = [
-  {
-    id: 1,
-    name: 'Yodla Platform',
-    tagline: 'Driving-school education',
-    description: 'Full platform.',
-    tech: 'NestJS, React Native',
-    url: 'https://yodla.uz',
-    githubUrl: null,
-    imageUrl: null,
-    displayOrder: 1,
-  },
-]
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
@@ -97,7 +83,7 @@ describe('Dashboard', () => {
 
   it('renders the toolbar with Profile & settings, View site, Log out', async () => {
     const html = await render(
-      <Dashboard posts={posts} work={work} projects={projects} csrf={CSRF} />
+      <Dashboard posts={posts} work={work} csrf={CSRF} />
     )
     expect(html).toContain('Profile')
     expect(html).toContain('settings')
@@ -107,7 +93,7 @@ describe('Dashboard', () => {
 
   it('logout form posts to /logout with _csrf', async () => {
     const html = await render(
-      <Dashboard posts={posts} work={work} projects={projects} csrf={CSRF} />
+      <Dashboard posts={posts} work={work} csrf={CSRF} />
     )
     expect(html).toContain('action="/logout"')
     expect(html).toContain('method="post"')
@@ -116,7 +102,7 @@ describe('Dashboard', () => {
 
   it('renders each post with title, View/Edit links and delete form', async () => {
     const html = await render(
-      <Dashboard posts={posts} work={work} projects={projects} csrf={CSRF} />
+      <Dashboard posts={posts} work={work} csrf={CSRF} />
     )
     expect(html).toContain('First Post')
     expect(html).toContain('Draft Post')
@@ -131,7 +117,7 @@ describe('Dashboard', () => {
 
   it('renders published / draft badges correctly', async () => {
     const html = await render(
-      <Dashboard posts={posts} work={work} projects={projects} csrf={CSRF} />
+      <Dashboard posts={posts} work={work} csrf={CSRF} />
     )
     expect(html).toContain('class="pub"')
     expect(html).toContain('class="draft"')
@@ -139,7 +125,7 @@ describe('Dashboard', () => {
 
   it('renders work entry with edit and delete', async () => {
     const html = await render(
-      <Dashboard posts={posts} work={work} projects={projects} csrf={CSRF} />
+      <Dashboard posts={posts} work={work} csrf={CSRF} />
     )
     expect(html).toContain('Full-stack Engineer')
     expect(html).toContain('Yodla')
@@ -148,62 +134,23 @@ describe('Dashboard', () => {
     expect(html).toContain("return confirm(&#39;Delete this entry?&#39;)")
   })
 
-  it('renders project with edit and delete', async () => {
-    const html = await render(
-      <Dashboard posts={posts} work={work} projects={projects} csrf={CSRF} />
-    )
-    expect(html).toContain('Yodla Platform')
-    expect(html).toContain('/admin/projects/1/edit')
-    expect(html).toContain('action="/admin/projects/1/delete"')
-    expect(html).toContain("return confirm(&#39;Delete this project?&#39;)")
-  })
-
   it('every delete form contains the csrf token', async () => {
     const html = await render(
-      <Dashboard posts={posts} work={work} projects={projects} csrf={CSRF} />
+      <Dashboard posts={posts} work={work} csrf={CSRF} />
     )
     // Count occurrences of CSRF token — should appear in every form
     const matches = html.match(new RegExp(`value="${CSRF}"`, 'g'))
-    // logout + 1 post delete + 1 work delete + 1 project delete = 4
+    // logout + 1 post delete + 1 work delete = 3
     expect(matches).not.toBeNull()
     expect(matches!.length).toBeGreaterThanOrEqual(4)
   })
 
   it('shows empty-state text when lists are empty', async () => {
     const html = await render(
-      <Dashboard posts={[]} work={[]} projects={[]} csrf={CSRF} />
+      <Dashboard posts={[]} work={[]} csrf={CSRF} />
     )
     expect(html).toContain('No posts yet')
     expect(html).toContain('No entries yet')
-    expect(html).toContain('No projects yet')
-  })
-
-  it('renders New post / New entry / New project buttons', async () => {
-    const html = await render(
-      <Dashboard posts={posts} work={work} projects={projects} csrf={CSRF} />
-    )
-    expect(html).toContain('/admin/posts/new')
-    expect(html).toContain('/admin/work/new')
-    expect(html).toContain('/admin/projects/new')
-  })
-})
-
-// ─── PostForm ─────────────────────────────────────────────────────────────────
-
-describe('PostForm', () => {
-  async function render(body: unknown) {
-    const app = new Hono()
-    app.get('/pf', (c) => c.html(body as string))
-    const res = await app.request('/pf')
-    return res.text()
-  }
-
-  it('new form: action=/admin/posts, method=post, hidden _csrf', async () => {
-    const html = await render(<PostForm post={null} csrf={CSRF} />)
-    expect(html).toContain('action="/admin/posts"')
-    expect(html).toContain('method="post"')
-    expect(html).toContain('name="_csrf"')
-    expect(html).toContain(`value="${CSRF}"`)
   })
 
   it('new form: fields are empty / unchecked', async () => {
@@ -330,62 +277,6 @@ describe('WorkForm', () => {
     expect(html).toContain('name="displayOrder"')
   })
 })
-
-// ─── ProjectForm ──────────────────────────────────────────────────────────────
-
-describe('ProjectForm', () => {
-  async function render(body: unknown) {
-    const app = new Hono()
-    app.get('/prf', (c) => c.html(body as string))
-    const res = await app.request('/prf')
-    return res.text()
-  }
-
-  it('new form: action=/admin/projects, method=post, hidden _csrf', async () => {
-    const html = await render(<ProjectForm project={null} csrf={CSRF} />)
-    expect(html).toContain('action="/admin/projects"')
-    expect(html).toContain('method="post"')
-    expect(html).toContain('name="_csrf"')
-    expect(html).toContain(`value="${CSRF}"`)
-    expect(html).toContain('New project.')
-  })
-
-  it('edit form: prefills all fields', async () => {
-    const p: Project = {
-      id: 7,
-      name: 'My App',
-      tagline: 'Cool tagline',
-      description: 'A great description.',
-      tech: 'React, Hono',
-      url: 'https://myapp.com',
-      githubUrl: 'https://github.com/user/myapp',
-      imageUrl: 'https://myapp.com/img.png',
-      displayOrder: 3,
-    }
-    const html = await render(<ProjectForm project={p} csrf={CSRF} />)
-    expect(html).toContain('value="7"')   // hidden id
-    expect(html).toContain('value="My App"')
-    expect(html).toContain('value="Cool tagline"')
-    expect(html).toContain('A great description.')
-    expect(html).toContain('value="React, Hono"')
-    expect(html).toContain('value="https://myapp.com"')
-    expect(html).toContain('Edit project.')
-  })
-
-  it('renders all required fields', async () => {
-    const html = await render(<ProjectForm project={null} csrf={CSRF} />)
-    expect(html).toContain('name="name"')
-    expect(html).toContain('name="tagline"')
-    expect(html).toContain('name="description"')
-    expect(html).toContain('name="tech"')
-    expect(html).toContain('name="url"')
-    expect(html).toContain('name="githubUrl"')
-    expect(html).toContain('name="imageUrl"')
-    expect(html).toContain('name="displayOrder"')
-  })
-})
-
-// ─── ProfileForm ──────────────────────────────────────────────────────────────
 
 describe('ProfileForm', () => {
   async function render(body: unknown) {

@@ -4,7 +4,6 @@ import type { Env } from '../src/types'
 import { getProfile, updateProfile, setPhotoPath } from '../src/db/profile'
 import { getAccount, countAccounts, seedAccount, updateCredentials } from '../src/db/account'
 import { listWork, getWork, saveWork, deleteWork } from '../src/db/work'
-import { listProjects, getProject, saveProject, deleteProject } from '../src/db/project'
 
 const db = (env as unknown as Env).DB
 
@@ -241,80 +240,3 @@ describe('work', () => {
   })
 })
 
-// ─── Projects ─────────────────────────────────────────────────────────────────
-
-describe('projects', () => {
-  it('listProjects returns empty array initially', async () => {
-    const results = await listProjects(db)
-    expect(results).toEqual([])
-  })
-
-  it('saveProject INSERT then getProject round-trip (camelCase aliasing)', async () => {
-    const id = await saveProject(db, {
-      id: 0,
-      name: 'My App',
-      tagline: 'Cool app',
-      description: 'A cool app',
-      tech: 'React, TS',
-      url: 'https://myapp.com',
-      githubUrl: 'https://github.com/user/myapp',
-      imageUrl: '/img/myapp.png',
-      displayOrder: 1,
-    })
-    expect(typeof id).toBe('number')
-    expect(id).toBeGreaterThan(0)
-
-    const p = await getProject(db, id)
-    expect(p).not.toBeNull()
-    expect(p!.name).toBe('My App')
-    expect(p!.githubUrl).toBe('https://github.com/user/myapp') // aliased from github_url
-    expect(p!.imageUrl).toBe('/img/myapp.png')                  // aliased from image_url
-    expect(p!.displayOrder).toBe(1)                             // aliased from display_order
-    expect(p!.id).toBe(id)
-  })
-
-  it('saveProject UPDATE preserves id', async () => {
-    const id = await saveProject(db, {
-      id: 0, name: 'Old', tagline: null, description: null, tech: null,
-      url: null, githubUrl: null, imageUrl: null, displayOrder: 0,
-    })
-    await saveProject(db, {
-      id, name: 'New', tagline: null, description: null, tech: null,
-      url: null, githubUrl: null, imageUrl: null, displayOrder: 0,
-    })
-    const p = await getProject(db, id)
-    expect(p!.name).toBe('New')
-    expect(p!.id).toBe(id)
-    const all = await listProjects(db)
-    expect(all.length).toBe(1)
-  })
-
-  it('listProjects orders by display_order ASC', async () => {
-    await saveProject(db, {
-      id: 0, name: 'Third', tagline: null, description: null, tech: null,
-      url: null, githubUrl: null, imageUrl: null, displayOrder: 3,
-    })
-    await saveProject(db, {
-      id: 0, name: 'First', tagline: null, description: null, tech: null,
-      url: null, githubUrl: null, imageUrl: null, displayOrder: 1,
-    })
-    await saveProject(db, {
-      id: 0, name: 'Second', tagline: null, description: null, tech: null,
-      url: null, githubUrl: null, imageUrl: null, displayOrder: 2,
-    })
-    const results = await listProjects(db)
-    expect(results[0].name).toBe('First')
-    expect(results[1].name).toBe('Second')
-    expect(results[2].name).toBe('Third')
-  })
-
-  it('deleteProject removes the row', async () => {
-    const id = await saveProject(db, {
-      id: 0, name: 'ToDelete', tagline: null, description: null, tech: null,
-      url: null, githubUrl: null, imageUrl: null, displayOrder: 0,
-    })
-    await deleteProject(db, id)
-    const p = await getProject(db, id)
-    expect(p).toBeNull()
-  })
-})
