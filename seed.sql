@@ -44,7 +44,7 @@ VALUES
    'Tashkent, Uzbekistan',
    '2026-04-24',
    NULL,
-   'Driving-school app, ~500k users. Web, mobile, admin, CRM, payments.',
+   'Backend, mobile and web on a ~500k-user app. Built the in-house CRM that replaced amoCRM — ending that subscription, and shaped around how operators actually work.',
    'NestJS, React, PostgreSQL',
    'https://yodla-app.uz',
    NULL,

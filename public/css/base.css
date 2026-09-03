@@ -85,7 +85,10 @@
     --s-5: 1.25rem;  --s-6: 1.5rem;   --s-8: 2rem;     --s-10: 2.5rem;
     --s-12: 3rem;    --s-16: 4rem;
 
-    --measure: 66ch;
+    /* 66ch is the ideal measure for continuous prose; these are one- or
+       two-line entries in a list, where the upper end of the comfortable
+       range reads fine and saves a wrapped line per row. */
+    --measure: 78ch;
     --sheet-w: 62rem;
     --bar-h:   clamp(3.25rem, 7vh, 4rem);
 
