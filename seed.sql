@@ -18,7 +18,7 @@ VALUES
    'https://www.linkedin.com/in/muhammad-gulomov',
    'https://t.me/kanzenn',
    'https://instagram.com/thekanzen',
-   '/img/portrait.webp?v=2');
+   '/img/portrait.webp?v=3');
 
 -- ---------------------------------------------------------------------------
 -- work_experiences (5 rows, explicit ids)

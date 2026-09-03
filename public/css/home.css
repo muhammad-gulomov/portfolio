@@ -92,8 +92,18 @@
 
 /* ── Ledger ─────────────────────────────────────────────── */
 
+/* The heading sits above the rule, so the rule reads as the top of the
+   list rather than a line the heading floats on. */
+.work { margin-top: clamp(var(--s-3), 2.4vh, var(--s-10)); }
+
+.work-title {
+    margin-bottom: clamp(var(--s-2), 1.2vh, var(--s-3));
+    font-size: var(--t-base);
+    font-weight: 500;
+    color: var(--text-dim);
+}
+
 .ledger {
-    margin-top: clamp(var(--s-3), 2.4vh, var(--s-10));
     padding: clamp(var(--s-2), 1.7vh, var(--s-6)) 0;
     border-top: 1px solid var(--rule);
     display: grid;

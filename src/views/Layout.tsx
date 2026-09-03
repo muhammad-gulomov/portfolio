@@ -12,7 +12,7 @@ declare module 'hono' {
   }
 }
 
-const BUILD = 'v2027w'
+const BUILD = 'v2027x'
 
 const GROUND_LIGHT = '#f3f6f4'
 const GROUND_DARK = '#000000'

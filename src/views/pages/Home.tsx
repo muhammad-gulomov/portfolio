@@ -101,8 +101,9 @@ export function Home({ owner, work, workPeriods, t }: HomeProps) {
           )}
         </header>
 
-        <section class="ledger" id="work">
-          <h2 class="sr-only">{t('work.title')}</h2>
+        <section class="work" id="work">
+          <h2 class="work-title">{t('work.title')}</h2>
+          <div class="ledger">
 
           {work.length === 0
             ? <p class="empty">{t('work.empty')}</p>
@@ -137,6 +138,7 @@ export function Home({ owner, work, workPeriods, t }: HomeProps) {
                 </article>
               )
             })}
+          </div>
         </section>
 
       </div>
