@@ -37,6 +37,8 @@
    the ledger about 270px wide, which is not enough for company,
    role and period to stay on one readable line. */
 
+.about .section-title { margin-bottom: clamp(var(--s-2), 1.2vh, var(--s-3)); }
+
 .intro {
     display: grid;
     /* The text column is bounded rather than 1fr: left free, it stretched to
@@ -96,7 +98,7 @@
    list rather than a line the heading floats on. */
 .work { margin-top: clamp(var(--s-3), 2.4vh, var(--s-10)); }
 
-.work-title {
+.section-title {
     margin-bottom: clamp(var(--s-2), 1.2vh, var(--s-3));
     font-size: var(--t-base);
     font-weight: 500;

@@ -77,8 +77,13 @@ export function Home({ owner, work, workPeriods, t }: HomeProps) {
         {/* Intro left, portrait right; the work ledger runs full width beneath
             them. Keeping the ledger out of this row is what lets its three
             columns stay wide enough to read. */}
-        <header class="intro">
+        <section class="about">
+          <header class="intro">
           <div class="intro-text">
+            {/* The heading sits inside the text column so it centres with the
+                paragraphs against the taller photo. Placed above the row, it
+                floated ~70px clear of the text it introduces. */}
+            <h2 class="section-title">{t('about.title')}</h2>
             {/* raw() because the intro names the products it links to, and a
                 link inside a sentence cannot be expressed as plain text. The
                 strings are constants in messages.ts, not CMS content. */}
@@ -98,11 +103,12 @@ export function Home({ owner, work, workPeriods, t }: HomeProps) {
                 decoding="async"
               />
             </div>
-          )}
-        </header>
+            )}
+          </header>
+        </section>
 
         <section class="work" id="work">
-          <h2 class="work-title">{t('work.title')}</h2>
+          <h2 class="section-title">{t('work.title')}</h2>
           <div class="ledger">
 
           {work.length === 0
