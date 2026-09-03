@@ -4,7 +4,7 @@ import type { SiteProfile } from './types'
 export const SEED_OWNER: SiteProfile = {
   name: 'Muhammad Gulomov',
   handle: 'muhammad-gulomov',
-  tagline: 'Software engineer. Builder of quiet systems and loud ideas.',
+  tagline: 'Software engineer in Tashkent.',
   location: 'Tashkent, Uzbekistan',
   email: 'muhammad-gulomov@proton.me',
   github: 'https://github.com/muhammad-gulomov',

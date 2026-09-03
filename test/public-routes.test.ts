@@ -3,8 +3,6 @@ import { SELF } from 'cloudflare:test'
 import { describe, it, expect, beforeEach } from 'vitest'
 import type { Env } from '../src/types'
 import { saveWork } from '../src/db/work'
-import { saveProject } from '../src/db/project'
-import { savePost, getById } from '../src/db/blog'
 import { putPhoto } from '../src/media/photo'
 import { updateProfile } from '../src/db/profile'
 import { fmtPeriod } from '../src/routes/public'
@@ -24,11 +22,7 @@ beforeEach(async () => {
 // ─── GET / ────────────────────────────────────────────────────────────────────
 
 describe('GET /', () => {
-  it('returns 200 and contains seeded project name', async () => {
-    await saveProject(db, {
-      id: 0, name: 'SuperApp', tagline: 'The best app', description: null,
-      tech: 'TS', url: null, githubUrl: null, imageUrl: null, displayOrder: 1,
-    })
+  it('returns 200 and contains work company name', async () => {
     await saveWork(db, {
       id: 0, company: 'Acme Corp', role: 'Engineer', location: null,
       startDate: '2022-01-01', endDate: null, summary: null, tech: null,
@@ -38,7 +32,7 @@ describe('GET /', () => {
     const res = await SELF.fetch('https://x/')
     expect(res.status).toBe(200)
     const body = await res.text()
-    expect(body).toContain('SuperApp')
+    expect(body).toContain('Acme Corp')
   })
 
   it('shows work period label for work entry', async () => {
@@ -93,80 +87,18 @@ describe('GET /', () => {
 // ─── GET /blog ────────────────────────────────────────────────────────────────
 
 describe('GET /blog', () => {
-  it('returns 200 and lists published post title', async () => {
-    await savePost(db, {
-      id: 0, slug: 'my-post', title: 'My First Post', excerpt: null,
-      content: 'Hello world', publishedAt: '2025-01-01T00:00:00.000Z',
-      readingMinutes: 1, views: 0, published: 1,
-    })
-
-    const res = await SELF.fetch('https://x/blog')
-    expect(res.status).toBe(200)
-    const body = await res.text()
-    expect(body).toContain('My First Post')
-  })
-
-  it('does not list unpublished posts', async () => {
-    await savePost(db, {
-      id: 0, slug: 'draft-post', title: 'Draft Post', excerpt: null,
-      content: 'Not yet', publishedAt: '2025-01-01T00:00:00.000Z',
-      readingMinutes: 1, views: 0, published: 0,
-    })
-
-    const res = await SELF.fetch('https://x/blog')
-    expect(res.status).toBe(200)
-    const body = await res.text()
-    expect(body).not.toContain('Draft Post')
+  it('redirects to home', async () => {
+    const res = await SELF.fetch('https://x/blog', { redirect: 'manual' })
+    expect(res.status).toBe(302)
+    expect(res.headers.get('location')).toBe('/')
   })
 })
 
-// ─── GET /blog/:slug ──────────────────────────────────────────────────────────
-
 describe('GET /blog/:slug', () => {
-  it('returns 200 for a published post', async () => {
-    await savePost(db, {
-      id: 0, slug: 'hello-world', title: 'Hello World', excerpt: null,
-      content: '# Hello\n\nThis is content.', publishedAt: '2025-01-01T00:00:00.000Z',
-      readingMinutes: 1, views: 0, published: 1,
-    })
-
-    const res = await SELF.fetch('https://x/blog/hello-world')
-    expect(res.status).toBe(200)
-    const body = await res.text()
-    expect(body).toContain('Hello World')
-  })
-
-  it('increments views on successive visits', async () => {
-    const postId = await savePost(db, {
-      id: 0, slug: 'view-counter', title: 'View Counter', excerpt: null,
-      content: 'Views test', publishedAt: '2025-01-01T00:00:00.000Z',
-      readingMinutes: 1, views: 0, published: 1,
-    })
-
-    // First visit
-    await SELF.fetch('https://x/blog/view-counter')
-    // Second visit
-    await SELF.fetch('https://x/blog/view-counter')
-
-    const post = await getById(db, postId)
-    expect(post).not.toBeNull()
-    expect(post!.views).toBe(2)
-  })
-
-  it('returns 404 for an unpublished post', async () => {
-    await savePost(db, {
-      id: 0, slug: 'hidden-post', title: 'Hidden Post', excerpt: null,
-      content: 'Secret', publishedAt: '2025-01-01T00:00:00.000Z',
-      readingMinutes: 1, views: 0, published: 0,
-    })
-
-    const res = await SELF.fetch('https://x/blog/hidden-post')
-    expect(res.status).toBe(404)
-  })
-
-  it('returns 404 for a nonexistent slug', async () => {
-    const res = await SELF.fetch('https://x/blog/does-not-exist')
-    expect(res.status).toBe(404)
+  it('redirects to home', async () => {
+    const res = await SELF.fetch('https://x/blog/hello-world', { redirect: 'manual' })
+    expect(res.status).toBe(302)
+    expect(res.headers.get('location')).toBe('/')
   })
 })
 

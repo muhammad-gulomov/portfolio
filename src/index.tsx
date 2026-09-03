@@ -4,7 +4,6 @@ import { SEED_OWNER } from './seed-owner'
 import { getProfile } from './db/profile'
 import Layout from './views/Layout'
 import publicRoutes from './routes/public'
-import blogRoutes from './routes/blog'
 import mediaRoutes from './routes/media'
 import authRoutes from './routes/auth'
 import adminRoutes from './routes/admin'
@@ -65,7 +64,6 @@ app.route('/', telegramRoutes)
 app.route('/', authRoutes)
 app.route('/', adminRoutes)
 app.route('/', publicRoutes)
-app.route('/', blogRoutes)
 app.route('/', mediaRoutes)
 
 export default {
