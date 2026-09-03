@@ -106,10 +106,49 @@
 }
 
 .ledger {
+    /* The row gap is named because the timeline connector has to reach across
+       it to the next marker; hard-coding it twice would let them drift. */
+    --row-gap: clamp(var(--s-2), 1.5vh, var(--s-5));
+    --rail: 1.5rem;
+
     padding: clamp(var(--s-2), 1.7vh, var(--s-6)) 0;
+    padding-left: var(--rail);
     border-top: 1px solid var(--rule);
     display: grid;
-    gap: clamp(var(--s-2), 1.5vh, var(--s-5));
+    gap: var(--row-gap);
+}
+
+/* ── Timeline ─────────────────────────────────────────────
+   A marker per role, joined by a line. The connector is drawn on each
+   role except the last, so the rail ends at the final marker instead of
+   trailing into empty space — which is what a ::before on the container
+   would have done. */
+
+.role { position: relative; }
+
+.role::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--rail) * -1);
+    top: 0.42em;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--text);
+    /* The ring is the page showing through, so the line appears to pass
+       behind the marker rather than butting into it. */
+    box-shadow: 0 0 0 3px var(--ground);
+    z-index: 1;
+}
+
+.role:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--rail) * -1 + 4px);
+    top: 0.42em;
+    bottom: calc(var(--row-gap) * -1);
+    width: 1px;
+    background: var(--rule);
 }
 
 /* Three columns on a shared baseline. The right-aligned period
