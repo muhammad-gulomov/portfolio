@@ -22,7 +22,7 @@ export const EN: Record<string, string> = {
   // because they are compile-time constants in this file — author-controlled,
   // never user input. Anything that ever comes from the CMS must not be
   // rendered this way.
-  'intro.p1': "I'm a software engineer who builds products end to end — backend, frontend, mobile.",
+  'intro.p1': "I'm a 21-year-old software engineer who builds products end to end — backend, frontend, mobile.",
   'intro.p2': "Right now I'm the main programmer at <a href=\"https://yodla-app.uz\" target=\"_blank\" rel=\"noopener\">Yodla</a>, which reaches 500,000 users, and at <a href=\"https://avtodars-avtomaktab.uz\" target=\"_blank\" rel=\"noopener\">Avtodars</a>. On the side I'm building my own startup, <a href=\"https://birga-app.uz\" target=\"_blank\" rel=\"noopener\">Birga</a>.",
 
   'work.title': 'Work history',
@@ -66,7 +66,7 @@ export const RU: Record<string, string> = {
   'page.blog': 'Блог',
   'page.login': 'Вход',
 
-  'intro.p1': 'Я инженер-программист и делаю продукты целиком — бэкенд, фронтенд, мобильные приложения.',
+  'intro.p1': 'Я 21-летний инженер-программист, делаю продукты целиком — бэкенд, фронтенд, мобильные приложения.',
   'intro.p2': 'Сейчас я главный программист в <a href="https://yodla-app.uz" target="_blank" rel="noopener">Yodla</a> — 500 000 пользователей — и в <a href="https://avtodars-avtomaktab.uz" target="_blank" rel="noopener">Avtodars</a>. Параллельно развиваю свой стартап <a href="https://birga-app.uz" target="_blank" rel="noopener">Birga</a>.',
 
   'work.title': 'Опыт работы',
