@@ -12,12 +12,12 @@ declare module 'hono' {
   }
 }
 
-const BUILD = 'v2028j'
+const BUILD = 'v2028k'
 
 const SITE = 'https://kanzen.uz'
 
 const GROUND_LIGHT = '#f3f6f4'
-const GROUND_DARK = '#000000'
+const GROUND_DARK = '#18181b'
 
 // The M is drawn as a path, not an SVG <text> element. Text in a favicon
 // renders in whatever font the OS picks — never the site's face, and mushy at

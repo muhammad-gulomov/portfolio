@@ -1,7 +1,7 @@
 // Theme toggle + language menu. That is the whole script.
 
 (function () {
-    var GROUND = { light: '#f3f6f4', dark: '#000000' }
+    var GROUND = { light: '#f3f6f4', dark: '#18181b' }
 
     // ── Theme ────────────────────────────────────────────────────────────────
     document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
