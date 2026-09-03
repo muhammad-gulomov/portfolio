@@ -14,7 +14,6 @@ interface HomeProps {
   workPeriods: Record<number, string>
   t: TFn
   lang: Lang
-  currentYear: number
 }
 
 /**
@@ -57,7 +56,7 @@ function ContactLink({ c }: { c: Contact }) {
   )
 }
 
-export function Home({ owner, work, workPeriods, t, currentYear }: HomeProps) {
+export function Home({ owner, work, workPeriods, t }: HomeProps) {
   // Two groups, not one undifferentiated row: how to reach him, then where to
   // read about him — the second ordered from most professional to least.
   // The wider gap between the groups is the only thing marking the split;
@@ -147,9 +146,8 @@ export function Home({ owner, work, workPeriods, t, currentYear }: HomeProps) {
           edge. .stack's auto margins absorb the space above it, which is what
           holds this at the bottom of the viewport. */}
       <footer class="contacts">
-        {/* The groups are wrapped so the links centre as one unit. Left as
-            three siblings, centring would have spread the copyright into the
-            middle along with them. */}
+        {/* One wrapper so the two groups share a single gap rule and centre
+            as one unit. */}
         <div class="contact-links">
           {reach.length > 0 && (
             <span class="group">
@@ -162,7 +160,6 @@ export function Home({ owner, work, workPeriods, t, currentYear }: HomeProps) {
             </span>
           )}
         </div>
-        <span class="copy">&copy; {currentYear}</span>
       </footer>
     </div>
   )

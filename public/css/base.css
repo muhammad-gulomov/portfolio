@@ -74,7 +74,7 @@
 
     /* 1.25 modular scale, 15px base */
     --t-xs:    0.75rem;    /* 12   utility bar          */
-    --t-sm:    0.8125rem;  /* 13   periods, copyright   */
+    --t-sm:    0.8125rem;  /* 13   small meta, hints    */
     --t-base:  0.9375rem;  /* 15   summaries, contacts  */
     --t-md:    1.0625rem;  /* 17   company              */
     --t-lg:    1.1875rem;  /* 19   lede                 */

@@ -51,7 +51,6 @@ publicRoutes.get('/', async (c) => {
       workPeriods={workPeriods}
       t={t}
       lang={lang}
-      currentYear={c.get('currentYear')}
     />,
     { title: c.get('owner').name, css: 'home' },
   )

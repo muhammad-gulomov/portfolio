@@ -184,17 +184,11 @@
                                   is short, follows the content when it is not */
     padding-top: clamp(var(--s-4), 2.4vh, var(--s-8));
     border-top: 1px solid var(--rule);
-    /* Three columns with equal 1fr sides: the middle column is centred
-       against the full sheet no matter how wide the copyright is. Centring
-       a flex row instead would shift the links whenever that text changed. */
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: var(--s-3);
+    display: flex;
+    justify-content: center;
 }
 
 .contact-links {
-    grid-column: 2;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -228,13 +222,6 @@
 
 .contacts svg { flex: none; }
 
-.copy {
-    grid-column: 3;
-    justify-self: end;
-    font-size: var(--t-sm);
-    color: var(--text-dim);
-    font-variant-numeric: tabular-nums;
-}
 
 /* ── Very short viewports ─────────────────────────────────
    A 1366x768 laptop leaves ~681px of usable height, the tightest case
@@ -276,8 +263,6 @@
     .period     { grid-column: 2; }
 
     .ledger   { gap: var(--s-6); }
-    /* One column on a phone: links centred, copyright centred beneath. */
-    .contacts       { grid-template-columns: 1fr; }
-    .contact-links  { grid-column: 1; gap: var(--s-3) var(--s-5); }
-    .copy           { grid-column: 1; justify-self: center; }
+    /* Tighter gaps once the row wraps onto two lines. */
+    .contact-links { gap: var(--s-3) var(--s-5); }
 }

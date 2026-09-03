@@ -48,7 +48,6 @@ app.use('*', async (c, next) => {
 
 app.use('*', async (c, next) => {
   if (isBarePath(c.req.path)) return next()
-  c.set('currentYear', new Date().getFullYear())
   c.set('owner', (await getProfile(c.env.DB)) ?? SEED_OWNER)
   await next()
 })

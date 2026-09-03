@@ -67,7 +67,6 @@ describe('DOCTYPE emission', () => {
     app.use('*', LayoutMiddleware)
     app.get('/t', (c) => {
       c.set('owner', owner)
-      c.set('currentYear', 2026)
       c.set('lang', lang)
       c.set('t', t)
       return c.render(<p>x</p>, { title: 'T' })
@@ -92,7 +91,7 @@ describe('Layout stylesheet inlining', () => {
   beforeEach(() => clearCssCache())
 
   const boot = (c: any) => {
-    c.set('owner', owner); c.set('currentYear', 2026)
+    c.set('owner', owner)
     c.set('lang', lang); c.set('t', t)
   }
 
@@ -168,7 +167,6 @@ describe('Home', () => {
           workPeriods={periods}
           t={t}
           lang={lang}
-          currentYear={2026}
         />,
       ),
     )
@@ -249,7 +247,6 @@ describe('Home', () => {
           workPeriods={workPeriods}
           t={t}
           lang={lang}
-          currentYear={2026}
         />,
       ),
     )
@@ -281,7 +278,6 @@ describe('Home', () => {
           workPeriods={workPeriods}
           t={t}
           lang={lang}
-          currentYear={2026}
         />,
       ),
     )
@@ -303,7 +299,6 @@ describe('Home', () => {
           workPeriods={{}}
           t={t}
           lang={lang}
-          currentYear={2026}
         />,
       ),
     )
@@ -321,7 +316,6 @@ describe('Home', () => {
           workPeriods={workPeriods}
           t={t}
           lang={lang}
-          currentYear={2026}
         />,
       ),
     )
@@ -408,6 +402,6 @@ describe('Login', () => {
     const body = await res.text()
     expect(body).toContain('action="/login"')
     expect(body).toContain('name="_csrf"')
-    expect(body).toContain('v2027v')
+    expect(body).toContain('v2027w')
   })
 })

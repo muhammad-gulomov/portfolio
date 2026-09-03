@@ -33,7 +33,6 @@ export interface AdminAccount { id: number; username: string; passwordHash: stri
 // Hono context variables set by global middleware
 export type Vars = {
   owner: SiteProfile
-  currentYear: number
   csrf?: string
   lang: 'en' | 'ru'
   t: (key: string, ...args: (string | number)[]) => string
