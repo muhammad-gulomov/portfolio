@@ -11,32 +11,44 @@ VALUES
   (1,
    'Muhammad Gulomov',
    'muhammad-gulomov',
-   'Software engineer. Builder of quiet systems and loud ideas.',
+   'Software engineer in Tashkent.',
    'Tashkent, Uzbekistan',
    'muhammad-gulomov@proton.me',
    'https://github.com/muhammad-gulomov',
    'https://www.linkedin.com/in/muhammad-gulomov',
    'https://t.me/kanzenn',
-   'https://instagram.com/kanzen.swe',
-   NULL);
+   'https://instagram.com/thekanzen',
+   '/img/portrait.webp?v=2');
 
 -- ---------------------------------------------------------------------------
--- work_experiences (4 rows, explicit ids)
+-- work_experiences (5 rows, explicit ids)
 -- ---------------------------------------------------------------------------
 INSERT OR IGNORE INTO work_experiences
   (id, company, role, location, start_date, end_date, summary, tech, url, project_links, display_order)
 VALUES
+  (5,
+   'Avtodars',
+   'Full Stack Engineer',
+   'Tashkent, Uzbekistan',
+   '2026-07-01',
+   NULL,
+   'Full stack, on-site.',
+   NULL,
+   'https://avtodars-avtomaktab.uz',
+   NULL,
+   0),
+
   (1,
    'Yodla',
    'Software Engineer',
    'Tashkent, Uzbekistan',
    '2026-04-24',
    NULL,
-   'Own the whole stack of a driving-school education platform: backend, web, mobile, and devops. Lesson flows, payments, the data layer underneath, and the API contracts the clients rely on.',
+   'Driving-school app, ~500k users. Web, mobile, admin, CRM, payments.',
    'NestJS, React, PostgreSQL',
    'https://yodla-app.uz',
    NULL,
-   0),
+   1),
 
   (2,
    'Tenzorsoft',
@@ -44,23 +56,23 @@ VALUES
    'Tashkent, Uzbekistan',
    '2026-03-01',
    '2026-04-30',
-   'Backend work across the firm''s client portfolio. Owned the full story module for luvi.uz end to end — upload pipeline, media handling, CDN delivery. On mycoal.uz, built the investment module and, separately, the product-lots CRUD that powers the marketplace. On Kimyo Sanoat AJ, wrote the transport-fleet module — vehicles, drivers, and dispatch.',
+   '[luvi.uz](https://luvi.uz) stories, [mycoal.uz](https://mycoal.uz) lots, [Kimyo Sanoat](https://uzkimyosanoat.uz) fleet.',
    'Java, Spring Boot, PostgreSQL, CDN, REST API',
-   NULL,
+   'https://tenzorsoft.com',
    'https://luvi.uz, https://mycoal.uz, https://uzkimyosanoat.uz',
-   1),
+   2),
 
   (3,
-   'Freelance',
-   'Java Backend Developer',
+   'Plymo',
+   'Founder & Full Stack Engineer',
    'Remote',
    '2025-06-01',
-   '2025-08-31',
-   'Built a workflow platform for business owners — task boards, columns, and role-based access for owners and employees. Wrote an SMTP + cron notification service that emails users when tasks are assigned or started, and shipped both the frontend and backend. Deployed on AWS EC2 behind Docker.',
-   'Java, Spring Boot, SMTP, Docker, AWS EC2',
    NULL,
-   'https://github.com/muhammad-gulomov/Plymo_1.0',
-   2),
+   'Built end to end. Used by two companies, one a major bank.',
+   'Java, Spring Boot, SMTP, Docker, AWS EC2',
+   'https://plymo.uz',
+   'https://plymo.uz',
+   3),
 
   (4,
    'PDP Academy',
@@ -68,11 +80,11 @@ VALUES
    'Tashkent, Uzbekistan',
    '2024-05-01',
    '2024-07-31',
-   'Paired with a teammate to build the REST API behind a Flutter quiz app: courses, modules, tests, student progress, and the scoring/ranking math. JWT auth, Swagger docs, Dockerized and shipped to EC2 — reviewed and passed by the academy supervisor, earning our completion certificate.',
+   'Quiz API for a Flutter app.',
    'Java, Spring Boot, JWT, Swagger, Docker, AWS EC2',
    NULL,
-   'https://github.com/muhammad-gulomov/pdp-quiz-project-backend',
-   3);
+   NULL,
+   4);
 
 -- ---------------------------------------------------------------------------
 -- projects (6 rows, explicit ids)
@@ -82,8 +94,8 @@ INSERT OR IGNORE INTO projects
 VALUES
   (1,
    'Facemash',
-   'A weekend homage to Mark Z''s first web hack — rewritten with a slick design and proper Elo math.',
-   'Two photos, one click, a running Elo leaderboard. Built on Spring Boot, Postgres, and Thymeleaf. Recent redesign: a dark editorial aesthetic with gold-glow winner animations and an in-place pair swap that avoids full page reloads.',
+   'Facemash clone, Elo ratings.',
+   'Two photos, one click, Elo leaderboard. Spring Boot, Postgres, Thymeleaf.',
    'Java, Spring Boot, Postgres, Thymeleaf',
    NULL,
    'https://github.com/muhammad-gulomov/facemash',
@@ -91,54 +103,24 @@ VALUES
    0),
 
   (2,
-   'Plymo 1.0',
-   'A solo full-stack build — v1 tagged release, end to end.',
-   'The first tagged release of Plymo, a side project shipped solo. Built to practice owning the full path from data model to UI rather than optimizing any single layer.',
+   'Plymo',
+   'Team task boards.',
+   'Workflow platform for business owners — task boards, columns, and role-based access.',
    'Java, Spring Boot, Thymeleaf, Postgres',
+   'https://plymo.uz',
    NULL,
-   'https://github.com/muhammad-gulomov/Plymo_1.0',
    NULL,
    1),
 
-  (3,
-   'PDP Quiz Backend',
-   'REST API for a quiz platform — question banks, scoring, sessions.',
-   'The backend of a quiz-based education project: question banks with multiple formats, a session/answer model, and scoring logic. Built as part of work at PDP Academy.',
-   'Java, Spring Boot, Spring Data JPA, Postgres',
-   NULL,
-   'https://github.com/muhammad-gulomov/pdp-quiz-project-backend',
-   NULL,
-   2),
-
   (4,
    'Tour Firm',
-   'Full-stack web app for a tour/travel firm — bookings, itineraries, admin.',
+   'Tour booking app.',
    'Customer-facing tour catalog and booking flow, plus an admin panel for itineraries, customers, and reservations. Classic server-rendered Spring application.',
    'Java, Spring Boot, Thymeleaf, Postgres',
    NULL,
    'https://github.com/muhammad-gulomov/tour-firm-project',
    NULL,
-   3),
-
-  (5,
-   'Yodla platform',
-   'A driving-school education app used by students across Uzbekistan.',
-   'Consumer-facing lessons, quizzes, practice tests, and a lightweight CMS for instructors. I own backend, web, mobile, and devops end to end.',
-   'NestJS, React, PostgreSQL',
-   'https://yodla-app.uz',
-   NULL,
-   NULL,
-   4),
-
-  (6,
-   'This portfolio',
-   'The thing you''re looking at right now.',
-   'A small Cloudflare Workers + Hono site running on the edge, with a D1-backed blog, workplace timeline, and secret-URL admin panel. No JavaScript framework — just CSS, markdown, and a bit of IntersectionObserver magic.',
-   'TypeScript, Hono, Cloudflare Workers, D1, R2, markdown-it',
-   NULL,
-   'https://github.com/muhammad-gulomov',
-   NULL,
-   5);
+   3);
 
 -- ---------------------------------------------------------------------------
 -- blog_posts (1 published welcome post)
