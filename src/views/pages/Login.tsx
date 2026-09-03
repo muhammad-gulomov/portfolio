@@ -8,9 +8,9 @@ type TFn = (key: string, ...args: (string | number)[]) => string
 const FAVICON =
   "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b0e14'/><rect x='5' y='5' width='22' height='22' rx='6' fill='none' stroke='%232ee6a6' stroke-width='1.4'/><text x='16' y='21' text-anchor='middle' font-family='Arial' font-weight='700' fill='%232ee6a6' font-size='14'>m</text></svg>"
 
-const BUILD = 'v2026'
+const BUILD = 'v2027u'
 
-const THEME_BOOT = `(function(){var t;try{t=localStorage.getItem('theme')}catch(e){}if(t!=='light'&&t!=='dark'){t='dark'}document.documentElement.setAttribute('data-theme',t);if(t==='light'){var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#f6f8fa')}})();`
+const THEME_BOOT = `(function(){var t;try{t=localStorage.getItem('theme')}catch(e){}if(t!=='light'&&t!=='dark'){t='light'}document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='dark'?'#0b0e14':'#fafafa')})();`
 
 interface LoginProps {
   owner: SiteProfile | null
@@ -36,14 +36,6 @@ export function Login({ owner, csrf, t, lang, error, logout }: LoginProps) {
         <meta name="theme-color" content="#0b0e14" />
         {raw(`<script>${THEME_BOOT}</script>`)}
         <title>{t('page.login')}{owner?.name ? ` — ${owner.name}` : ''}</title>
-
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@300;400;500;600&display=swap"
-          rel="stylesheet"
-        />
-
         <link rel="stylesheet" href={`/css/base.css?v=${BUILD}`} />
         <link rel="stylesheet" href={`/css/admin.css?v=${BUILD}`} />
 

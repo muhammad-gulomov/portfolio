@@ -16,7 +16,7 @@ export function WorkForm({ work, csrf }: WorkFormProps) {
   return (
     <section class="admin-shell">
       <div class="container">
-        <a href="/admin" style="display:inline-flex;align-items:center;gap:8px;font-size:.82em;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:30px;text-decoration:none;">← Dashboard</a>
+        <a href="/admin" class="admin-back">← Dashboard</a>
 
         <div class="eyebrow">Work</div>
         <h1>{isNew ? 'New experience.' : 'Edit experience.'}</h1>
@@ -80,7 +80,7 @@ export function WorkForm({ work, csrf }: WorkFormProps) {
 
           <div class="form-footer">
             <div class="admin-actions">
-              <button type="submit" class="btn primary">Save <span class="arrow">→</span></button>
+              <button type="submit" class="btn primary">Save</button>
               <a href="/admin" class="btn">Cancel</a>
             </div>
           </div>

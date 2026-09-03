@@ -1,476 +1,360 @@
 /* =========================================================
-   Admin dashboard + forms
+   Admin + login
+
+   Self-contained on the tokens in base.css. It previously leaned on
+   layout primitives that lived in base.css — .container above all —
+   and when base.css was rewritten those disappeared, which is why the
+   dashboard lost its max-width, its centring and both gutters and ran
+   off the edges of the window. Everything it needs is now declared
+   here, so this file cannot be broken from a distance again.
    ========================================================= */
 
-.admin-shell {
-    padding: 120px 0 120px;
+.container {
+    /* Same width as the topbar above it, so the brand and the content
+       below share one left edge instead of missing each other by 64px. */
+    max-width: var(--sheet-w);
+    margin: 0 auto;
+    padding: 0 var(--s-6);
 }
 
-.admin-shell .eyebrow {
-    margin-bottom: 14px;
+.admin-shell { padding: var(--s-10) 0 var(--s-16); }
+
+/* ── Page head ──────────────────────────────────────────── */
+
+.eyebrow {
+    font-size: var(--t-sm);
+    color: var(--text-dim);
+    margin-bottom: var(--s-2);
 }
 
 .admin-shell h1 {
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: clamp(2.2em, 5.5vw, 3.4em);
+    font-size: 1.75rem;
+    font-weight: 600;
     letter-spacing: -0.02em;
-    margin-bottom: 16px;
+    line-height: 1.15;
 }
 
+/* The markup wraps a word in <em> for a two-tone display heading.
+   A control panel heading is a label, not a banner — so it renders
+   as one plain phrase. */
 .admin-shell h1 em {
-    color: var(--gold-400);
     font-style: normal;
+    color: inherit;
 }
 
-.admin-shell .sub {
-    color: var(--fg-dim);
-    margin-bottom: 48px;
+.sub {
+    margin-top: var(--s-2);
+    max-width: 62ch;
+    color: var(--text-dim);
 }
 
-/* Dashboard sections — override the landing-page `section`
-   padding from base.css, which otherwise adds 90-180px gaps. */
-.admin-section {
-    margin-top: 56px;
-    padding: 0;
+.admin-back {
+    display: inline-block;
+    margin-bottom: var(--s-6);
+    font-size: var(--t-sm);
+    color: var(--text-dim);
+    transition: color var(--dur) var(--ease);
 }
+.admin-back:hover { color: var(--accent); }
 
-.admin-section header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    gap: 16px;
-    flex-wrap: wrap;
-}
+/* ── Buttons ────────────────────────────────────────────── */
 
-.admin-section header h2 {
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 1.6em;
-    color: var(--fg);
-}
-
-.admin-section header .count {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.76em;
-    color: var(--muted);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-}
-
-.admin-list {
-    border-top: 1px solid var(--line);
-}
-
-.admin-list .row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 16px;
-    padding: 18px 20px;
-    border-bottom: 1px solid var(--line);
-    align-items: center;
-    transition: background var(--dur-fast) var(--ease);
-}
-
-.admin-list .row:hover {
-    background: rgba(46, 230, 166, 0.05);
-}
-
-.admin-list .row .title {
-    color: var(--fg);
-    font-size: 1.05em;
-    font-weight: 500;
-}
-
-.admin-list .row .sub-meta {
-    display: flex;
-    gap: 12px;
-    margin-top: 4px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.76em;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    flex-wrap: wrap;
-}
-
-.admin-list .row .sub-meta .draft {
-    color: var(--warm);
-}
-
-.admin-list .row .sub-meta .pub {
-    color: var(--live-400);
-}
-
-.admin-list .row .actions {
-    display: flex;
-    gap: 8px;
-}
-
-.admin-list .row .actions a,
-.admin-list .row .actions button {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.74em;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    padding: 8px 14px;
-    border-radius: var(--r-sm);
-    border: 1px solid var(--line-strong);
-    background: transparent;
-    color: var(--fg-dim);
-    cursor: pointer;
-    transition: color var(--dur-fast) var(--ease),
-                border-color var(--dur-fast) var(--ease),
-                background var(--dur-fast) var(--ease);
-    text-decoration: none;
-}
-
-.admin-list .row .actions a:hover {
-    color: var(--on-accent);
-    border-color: var(--gold-500);
-    background: var(--gold-500);
-}
-
-.admin-list .row .actions .danger:hover {
-    color: #fff;
-    border-color: #dc2626;
-    background: #dc2626;
-}
-
-.admin-list .empty {
-    padding: 40px;
-    text-align: center;
-    color: var(--muted);
-    font-family: 'Inter', sans-serif;
-}
-
-/* Primary + secondary buttons in admin */
-.admin-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-/* Forms */
-.admin-form {
-    margin-top: 32px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 24px;
-    max-width: 780px;
-}
-
-.admin-form .field {
-    display: grid;
-    gap: 8px;
-}
-
-.admin-form label {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.76em;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 500;
-}
-
-.admin-form .hint {
-    color: var(--muted);
-    font-size: 0.82em;
-    font-style: italic;
-}
-
-.admin-form input[type="text"],
-.admin-form input[type="date"],
-.admin-form input[type="url"],
-.admin-form input[type="number"],
-.admin-form input[type="email"],
-.admin-form textarea,
-.admin-form select {
-    width: 100%;
-    padding: 14px 16px;
-    background: var(--surface);
-    border: 1px solid var(--line-strong);
-    color: var(--fg);
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 1em;
-    border-radius: var(--r-sm);
-    transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
-}
-
-.admin-form textarea {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.95em;
-    min-height: 160px;
-    resize: vertical;
-    line-height: 1.6;
-}
-
-.admin-form textarea.big {
-    min-height: 440px;
-}
-
-.admin-form input:focus,
-.admin-form textarea:focus,
-.admin-form select:focus {
-    outline: none;
-    border-color: var(--gold-500);
-    background: var(--surface-hi);
-    box-shadow: 0 0 0 4px rgba(46, 230, 166, 0.12);
-}
-
-.admin-form .row-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
-.admin-form .checkbox {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.88em;
-    letter-spacing: 0.02em;
-    color: var(--fg);
-    text-transform: none;
-}
-
-.admin-form .checkbox input {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--blue-500);
-}
-
-.admin-form .lang-block {
-    margin: 8px 0 28px;
-    padding: 22px 20px 8px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: var(--ink-850, var(--ink-800));
-}
-
-.admin-form .lang-block > h3 {
-    margin: 0 0 18px;
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
-    font-size: 0.95em;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--bone-50);
-}
-
-.admin-form .lang-block > h3 .hint {
-    margin-left: 8px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    font-size: 0.85em;
-    letter-spacing: 0;
-    text-transform: none;
-    color: var(--muted);
-}
-
-.admin-form .form-footer {
-    display: flex;
-    gap: 12px;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
-    margin-top: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-}
-
-@media (max-width: 620px) {
-    .admin-form .row-2 { grid-template-columns: 1fr; }
-    .admin-list .row { grid-template-columns: 1fr; }
-    .admin-list .row .actions { justify-self: flex-end; }
-}
-
-/* =========================================================
-   Admin toolbar + logout
-   ========================================================= */
 .admin-toolbar {
     display: flex;
-    gap: 12px;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 8px;
-    padding-bottom: 44px;
-    border-bottom: 1px solid var(--line);
+    gap: var(--s-3);
+    margin-top: var(--s-6);
 }
 
-.logout-btn {
-    border-color: rgba(232, 107, 107, 0.4) !important;
-    color: #e8866b !important;
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-size: var(--t-base);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--text);
+    background: transparent;
+    cursor: pointer;
+    transition: border-color var(--dur) var(--ease),
+                color var(--dur) var(--ease),
+                background var(--dur) var(--ease);
 }
-.logout-btn:hover {
-    background: #dc2626 !important;
-    border-color: #dc2626 !important;
-    color: #fff !important;
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+}
+.btn.primary:hover { filter: brightness(1.08); color: var(--on-accent); }
+
+.logout-btn:hover { border-color: #c0392b; color: #c0392b; }
+
+/* ── Sections ───────────────────────────────────────────── */
+
+.admin-section { margin-top: var(--s-12); }
+
+.admin-section > header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-3);
+    padding-bottom: var(--s-3);
+    border-bottom: 1px solid var(--rule);
 }
 
-/* =========================================================
-   Profile photo field
-   ========================================================= */
+.admin-section h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-3);
+}
+
+.count {
+    font-size: var(--t-sm);
+    color: var(--text-dim);
+}
+
+/* ── Rows ───────────────────────────────────────────────── */
+
+.admin-list { display: flex; flex-direction: column; }
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    padding: var(--s-4) 0;
+    border-bottom: 1px solid var(--rule);
+}
+
+.row .title {
+    font-size: var(--t-md);
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+/* Was a tracked-out uppercase monospace strip — "JAN 1, 2026 2 MIN
+   60 VIEWS". Metadata is data, so it reads as plain muted text. */
+.sub-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-2);
+    margin-top: var(--s-1);
+    font-size: var(--t-sm);
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+}
+
+.pub   { color: var(--accent); }
+.draft { color: var(--text-dim); }
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    flex: none;
+    font-size: var(--t-base);
+}
+
+.actions a,
+.actions button {
+    color: var(--text-dim);
+    transition: color var(--dur) var(--ease);
+}
+.actions a:hover { color: var(--accent); }
+.actions .danger { color: var(--text-dim); }
+.actions .danger:hover { color: #c0392b; }
+
+.empty {
+    padding: var(--s-6) 0;
+    color: var(--text-dim);
+}
+
+/* ── Forms ──────────────────────────────────────────────── */
+
+.admin-form {
+    margin-top: var(--s-8);
+    max-width: 46rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+}
+
+.row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-5);
+}
+
+.field { display: flex; flex-direction: column; gap: var(--s-2); }
+
+.field label {
+    font-size: var(--t-sm);
+    font-weight: 500;
+    color: var(--text);
+}
+
+.hint {
+    font-weight: 400;
+    color: var(--text-dim);
+}
+
+.field input[type="text"],
+.field input[type="url"],
+.field input[type="date"],
+.field input[type="number"],
+.field input[type="password"],
+.field input[type="email"],
+.field select,
+.field textarea {
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--ground);
+    color: var(--text);
+    font: inherit;
+    transition: border-color var(--dur) var(--ease);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.field textarea { min-height: 7rem; resize: vertical; line-height: 1.55; }
+.field textarea.big { min-height: 26rem; }
+
+.checkbox {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--s-2);
+}
+.checkbox input { width: auto; }
+
+.form-footer {
+    margin-top: var(--s-2);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--rule);
+}
+
+/* ── Photo field ────────────────────────────────────────── */
+
 .photo-field {
     display: flex;
-    gap: 22px;
-    align-items: center;
-    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--s-5);
 }
 
 .photo-preview {
-    width: 108px;
-    height: 108px;
-    border-radius: var(--r-md);
-    border: 1px solid var(--line-strong);
+    flex: none;
+    width: 7rem;
+    aspect-ratio: 3 / 4;
     overflow: hidden;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(180deg, var(--surface-hi), var(--ink-900));
-    flex-shrink: 0;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
 
 .photo-empty {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.64em;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
+    padding: var(--s-2);
+    font-size: var(--t-sm);
+    color: var(--text-dim);
     text-align: center;
-    padding: 0 8px;
 }
 
-.photo-input { display: grid; gap: 10px; flex: 1; min-width: 220px; }
-.photo-input input[type="file"] {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.9em;
-    color: var(--fg-dim);
-}
-.photo-input input[type="file"]::file-selector-button {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.82em;
-    letter-spacing: 0.06em;
-    padding: 10px 16px;
-    margin-right: 14px;
-    background: var(--surface);
-    color: var(--fg);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--r-sm);
-    cursor: pointer;
-    transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
-}
-.photo-input input[type="file"]::file-selector-button:hover {
-    border-color: var(--gold-500);
-    background: var(--surface-hi);
+.photo-input {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    min-width: 0;
 }
 
-/* =========================================================
-   Login screen
-   ========================================================= */
+.login-alert {
+    padding: var(--s-3);
+    border: 1px solid #c0392b;
+    border-radius: 4px;
+    font-size: var(--t-sm);
+    color: #c0392b;
+}
+
+/* ── Login ──────────────────────────────────────────────── */
+
 .login-shell {
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    padding: 40px 20px;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--s-6);
 }
+.grain { display: none; }
 
 .login-card {
     width: 100%;
-    max-width: 420px;
-    background: linear-gradient(180deg, var(--ink-800), var(--ink-900));
-    border: 1px solid var(--line-strong);
-    border-radius: var(--r-lg);
-    padding: 48px 40px 36px;
-    position: relative;
-    box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.7);
+    max-width: 22rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
 }
 
 .login-mark {
-    display: inline-grid;
-    place-items: center;
-    width: 46px;
-    height: 46px;
-    border-radius: 12px;
-    border: 1px solid var(--gold-500);
-    color: var(--gold-400);
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 1.25rem;
     font-weight: 600;
-    font-size: 1.4em;
-    margin-bottom: 26px;
-    text-decoration: none;
-    transition: box-shadow var(--dur-fast) var(--ease);
+    letter-spacing: -0.015em;
 }
-.login-mark:hover { box-shadow: 0 0 24px var(--gold-glow); }
 
 .login-title {
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 2.2em;
+    font-size: 1.5rem;
+    font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: 1;
-    margin-bottom: 10px;
 }
-.login-title em { color: var(--gold-400); font-style: normal; }
+.login-title em { font-style: normal; color: inherit; }
 
-.login-sub { color: var(--muted); margin-bottom: 28px; font-size: 0.95em; }
+.login-sub { color: var(--text-dim); }
 
-.login-form { display: grid; gap: 18px; }
-.login-form .field { display: grid; gap: 8px; }
-.login-form label {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.72em;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-}
-.login-form input {
-    width: 100%;
-    padding: 14px 16px;
-    background: var(--surface);
-    border: 1px solid var(--line-strong);
-    color: var(--fg);
-    font-size: 1em;
-    border-radius: var(--r-sm);
-    transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
-}
-.login-form input:focus {
-    outline: none;
-    border-color: var(--gold-500);
-    background: var(--surface-hi);
-    box-shadow: 0 0 0 4px rgba(46, 230, 166, 0.12);
-}
-.login-submit { width: 100%; justify-content: center; margin-top: 6px; }
+.login-form { display: flex; flex-direction: column; gap: var(--s-4); }
+.login-submit { width: 100%; }
 
+.login-note,
 .login-back {
-    display: inline-block;
-    margin-top: 24px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.74em;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
+    font-size: var(--t-sm);
+    color: var(--text-dim);
+    transition: color var(--dur) var(--ease);
 }
-.login-back:hover { color: var(--gold-400); }
+.login-back:hover { color: var(--accent); }
 
-.login-alert {
-    background: rgba(232, 107, 107, 0.12);
-    border: 1px solid rgba(232, 107, 107, 0.4);
-    color: #f0b8ac;
-    padding: 12px 14px;
-    border-radius: var(--r-sm);
-    font-size: 0.88em;
-    margin-bottom: 20px;
-}
-.login-note {
-    background: rgba(125, 214, 161, 0.1);
-    border: 1px solid rgba(125, 214, 161, 0.35);
-    color: var(--live-400);
-    padding: 12px 14px;
-    border-radius: var(--r-sm);
-    font-size: 0.88em;
-    margin-bottom: 20px;
+/* ── Narrow ─────────────────────────────────────────────── */
+
+@media (max-width: 40rem) {
+    .container { padding: 0 var(--s-5); }
+    .admin-shell { padding: var(--s-8) 0 var(--s-12); }
+
+    .row-2 { grid-template-columns: 1fr; }
+
+    .row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--s-3);
+    }
+
+    .photo-field { flex-direction: column; }
 }

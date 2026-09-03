@@ -11,8 +11,7 @@ export function ProfileForm({ profile, accountUsername, csrf, photoError }: Prof
   return (
     <section class="admin-shell">
       <div class="container">
-        <a href="/admin" class="post-back"
-           style="display:inline-flex;align-items:center;gap:8px;font-size:.82em;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:30px;text-decoration:none;">← Dashboard</a>
+        <a href="/admin" class="admin-back">← Dashboard</a>
 
         <div class="eyebrow">Identity</div>
         <h1>Profile &amp; <em>settings</em>.</h1>
@@ -55,7 +54,7 @@ export function ProfileForm({ profile, accountUsername, csrf, photoError }: Prof
 
           <div class="field">
             <label for="tagline">Tagline</label>
-            <input type="text" id="tagline" name="tagline" value={profile.tagline} placeholder="Software engineer. Builder of quiet systems and loud ideas." />
+            <input type="text" id="tagline" name="tagline" value={profile.tagline} placeholder="Software engineer in Tashkent." />
           </div>
 
           <div class="row-2">
@@ -93,7 +92,7 @@ export function ProfileForm({ profile, accountUsername, csrf, photoError }: Prof
 
           <div class="form-footer">
             <div class="admin-actions">
-              <button type="submit" class="btn primary">Save profile <span class="arrow">→</span></button>
+              <button type="submit" class="btn primary">Save profile</button>
               <a href="/admin" class="btn">Cancel</a>
             </div>
           </div>
@@ -117,7 +116,7 @@ export function ProfileForm({ profile, accountUsername, csrf, photoError }: Prof
             </div>
             <div class="form-footer">
               <div class="admin-actions">
-                <button type="submit" class="btn primary">Update login <span class="arrow">→</span></button>
+                <button type="submit" class="btn primary">Update login</button>
               </div>
             </div>
           </form>

@@ -10,7 +10,7 @@ export function PostForm({ post, csrf }: PostFormProps) {
   return (
     <section class="admin-shell">
       <div class="container">
-        <a href="/admin" class="post-back" style="display:inline-flex;align-items:center;gap:8px;font-size:.82em;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:30px;">← Dashboard</a>
+        <a href="/admin" class="admin-back">← Dashboard</a>
 
         <div class="eyebrow">Compose</div>
         <h1>{isNew ? 'New post.' : 'Edit post.'}</h1>
@@ -49,7 +49,7 @@ export function PostForm({ post, csrf }: PostFormProps) {
 
           <div class="form-footer">
             <div class="admin-actions">
-              <button type="submit" class="btn primary">Save post <span class="arrow">→</span></button>
+              <button type="submit" class="btn primary">Save post</button>
               <a href="/admin" class="btn">Cancel</a>
             </div>
           </div>
