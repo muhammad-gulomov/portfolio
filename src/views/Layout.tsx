@@ -12,7 +12,7 @@ declare module 'hono' {
   }
 }
 
-const BUILD = 'v2028b'
+const BUILD = 'v2028d'
 
 const GROUND_LIGHT = '#f3f6f4'
 const GROUND_DARK = '#000000'
@@ -28,6 +28,13 @@ const FAVICON =
 
 // Runs before first paint so a dark-theme visitor never sees a light flash.
 // Kept inline and tiny for that reason — an external file would load too late.
+// Runs in <head>, before the browser would restore a saved scroll position.
+// Without this, reloading or navigating back to a one-page site can land the
+// reader on the footer instead of the page. It does NOT affect returning from
+// another app — that page was never unloaded, so nothing is being "restored".
+const SCROLL_BOOT =
+  `try{if('scrollRestoration' in history){history.scrollRestoration='manual'}}catch(e){}`
+
 const THEME_BOOT =
   `(function(){var t;try{t=localStorage.getItem('theme')}catch(e){}` +
   `if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}` +
@@ -109,7 +116,7 @@ export default jsxRenderer(
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <meta name="theme-color" content={GROUND_LIGHT} />
-          {raw(`<script>${THEME_BOOT}</script>`)}
+          {raw(`<script>${SCROLL_BOOT}${THEME_BOOT}</script>`)}
           <meta name="description" content={description} />
           <title>{pageTitle}</title>
 
