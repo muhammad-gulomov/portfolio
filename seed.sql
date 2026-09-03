@@ -68,7 +68,7 @@ VALUES
    'Remote',
    '2025-06-01',
    NULL,
-   'Built end to end — backend, frontend, and deployment on AWS. Task boards with role-based access, running at two companies, one a major bank.',
+   'Built end to end. Used by two companies, one a major bank.',
    'Java, Spring Boot, SMTP, Docker, AWS EC2',
    'https://plymo.uz',
    'https://plymo.uz',
