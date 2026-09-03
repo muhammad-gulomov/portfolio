@@ -12,13 +12,19 @@ declare module 'hono' {
   }
 }
 
-const BUILD = 'v2027u'
+const BUILD = 'v2027v'
 
 const GROUND_LIGHT = '#f3f6f4'
 const GROUND_DARK = '#000000'
 
+// The M is drawn as a path, not an SVG <text> element. Text in a favicon
+// renders in whatever font the OS picks — never the site's face, and mushy at
+// 16px. Round caps and joins match the stroke icons already in the topbar.
 const FAVICON =
-  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230a7a55'/><text x='16' y='22' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='600' fill='%23f3f6f4' font-size='17'>m</text></svg>"
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'>" +
+  "<rect width='32' height='32' rx='6' fill='%230a7a55'/>" +
+  "<path d='M8 23V10l8 8 8-8v13' fill='none' stroke='%23f3f6f4' stroke-width='3'" +
+  " stroke-linecap='round' stroke-linejoin='round'/></svg>"
 
 // Runs before first paint so a dark-theme visitor never sees a light flash.
 // Kept inline and tiny for that reason — an external file would load too late.

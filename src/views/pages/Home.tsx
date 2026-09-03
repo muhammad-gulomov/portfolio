@@ -147,16 +147,21 @@ export function Home({ owner, work, workPeriods, t, currentYear }: HomeProps) {
           edge. .stack's auto margins absorb the space above it, which is what
           holds this at the bottom of the viewport. */}
       <footer class="contacts">
-        {reach.length > 0 && (
-          <span class="group">
-            {reach.map((c) => <ContactLink key={c.label} c={c} />)}
-          </span>
-        )}
-        {find.length > 0 && (
-          <span class="group">
-            {find.map((c) => <ContactLink key={c.label} c={c} />)}
-          </span>
-        )}
+        {/* The groups are wrapped so the links centre as one unit. Left as
+            three siblings, centring would have spread the copyright into the
+            middle along with them. */}
+        <div class="contact-links">
+          {reach.length > 0 && (
+            <span class="group">
+              {reach.map((c) => <ContactLink key={c.label} c={c} />)}
+            </span>
+          )}
+          {find.length > 0 && (
+            <span class="group">
+              {find.map((c) => <ContactLink key={c.label} c={c} />)}
+            </span>
+          )}
+        </div>
         <span class="copy">&copy; {currentYear}</span>
       </footer>
     </div>
