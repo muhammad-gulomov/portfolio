@@ -44,7 +44,7 @@ VALUES
    'Tashkent, Uzbekistan',
    '2026-04-24',
    NULL,
-   'Backend, mobile and web on a ~500k-user app. Built the in-house CRM that replaced amoCRM — ending that subscription, and shaped around how operators actually work.',
+   'Backend, mobile and web on a ~500k-user app. Replaced amoCRM with an in-house CRM shaped around how operators work, and built internal tools that automated manual work and cut costs.',
    'NestJS, React, PostgreSQL',
    'https://yodla-app.uz',
    NULL,
