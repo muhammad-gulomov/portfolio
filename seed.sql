@@ -32,7 +32,7 @@ VALUES
    'Tashkent, Uzbekistan',
    '2026-07-01',
    NULL,
-   'Full stack, on-site.',
+   'Built from zero — backend, mobile app, landing page, and an admin panel wired into the CRM operators use.',
    NULL,
    'https://avtodars-avtomaktab.uz',
    NULL,
