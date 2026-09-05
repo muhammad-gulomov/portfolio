@@ -34,11 +34,16 @@
     --chip:         rgba(15, 31, 25, 0.06);   /* soft neutral button ground */
     --chip-hover:   rgba(15, 31, 25, 0.11);
 
-    /* Background texture. The dot is the page's own ink at a fraction of a
-       percent — dark on light, light on dark — so the grid reads as tooth in
-       the paper rather than as a colour laid over it. The glow is the accent
-       already in the palette, not a second hue. */
-    --dot:          rgba(15, 31, 25, 0.055);
+    /* Background texture. The dot is the page's own ink — dark on light,
+       light on dark — so the grid reads as tooth in the paper rather than as
+       a colour laid over it. The glow is the accent already in the palette,
+       not a second hue.
+
+       The two themes do NOT share an alpha. Light ink on a dark ground gains
+       apparent contrast, dark ink on a light ground loses it, so matching the
+       numbers left the light grid nearly invisible while the dark one read
+       fine. Light carries roughly double to land at the same weight. */
+    --dot:          rgba(15, 31, 25, 0.11);
     --glow:         rgba(10, 122, 85, 0.10);
 
     /* ── Type ─────────────────────────────────────────────
