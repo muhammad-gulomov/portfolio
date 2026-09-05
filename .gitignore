@@ -6,3 +6,4 @@ worker-configuration.d.ts
 .claude/
 *.tsbuildinfo
 .cursor/
+.superpowers/
