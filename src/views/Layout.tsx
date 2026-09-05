@@ -161,16 +161,6 @@ export default jsxRenderer(
             type="font/woff2"
             crossorigin=""
           />
-          {lang === 'ru' && (
-            <link
-              rel="preload"
-              href="/fonts/plex-cyrillic.woff2"
-              as="font"
-              type="font/woff2"
-              crossorigin=""
-            />
-          )}
-
           {inlineCss !== null
             ? raw(`<style>${inlineCss}</style>`)
             : (
@@ -194,37 +184,6 @@ export default jsxRenderer(
               : <span class="brand"><a href="/">{owner?.name ?? 'Muhammad Gulomov'}</a></span>}
 
             <div class="utility">
-            <div class="lang">
-              <button
-                class="lang-trigger"
-                type="button"
-                aria-haspopup="listbox"
-                aria-expanded="false"
-                aria-label={t('nav.lang')}
-                data-lang-trigger
-              >
-                <span class="flag" aria-hidden="true">{lang === 'ru' ? '\u{1F1F7}\u{1F1FA}' : '\u{1F1EC}\u{1F1E7}'}</span>
-                {raw(`<svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`)}
-              </button>
-
-              <ul class="lang-menu" role="listbox" hidden data-lang-menu>
-                <li>
-                  <a href="?lang=en" role="option" aria-selected={lang !== 'ru' ? 'true' : 'false'}
-                     class={lang !== 'ru' ? 'active' : ''} lang="en">
-                    <span class="flag" aria-hidden="true">{'\u{1F1EC}\u{1F1E7}'}</span>
-                    <span>English</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="?lang=ru" role="option" aria-selected={lang === 'ru' ? 'true' : 'false'}
-                     class={lang === 'ru' ? 'active' : ''} lang="ru">
-                    <span class="flag" aria-hidden="true">{'\u{1F1F7}\u{1F1FA}'}</span>
-                    <span>Русский</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-
               <button class="theme-toggle" type="button" aria-label={t('nav.theme')} data-theme-toggle>
                 {raw(`<svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`)}
                 {raw(`<svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`)}

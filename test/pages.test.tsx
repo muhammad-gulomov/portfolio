@@ -405,3 +405,34 @@ describe('Login', () => {
     expect(body).toContain('v2028k')
   })
 })
+
+describe('no language affordances remain', () => {
+  beforeEach(() => clearCssCache())
+
+  it('renders no language picker in the topbar', async () => {
+    const app = new Hono<{ Variables: Vars }>()
+    app.use('*', LayoutMiddleware)
+    app.get('/t', (c) => {
+      c.set('owner', owner)
+      c.set('lang', lang)
+      c.set('t', t)
+      return c.render(<p>x</p>, { title: 'T', css: 'home' })
+    })
+    const body = await (await app.request('/t')).text()
+    expect(body).not.toContain('data-lang-trigger')
+    expect(body).not.toContain('data-lang-menu')
+  })
+
+  it('never preloads the Cyrillic font', async () => {
+    const app = new Hono<{ Variables: Vars }>()
+    app.use('*', LayoutMiddleware)
+    app.get('/t', (c) => {
+      c.set('owner', owner)
+      c.set('lang', lang)
+      c.set('t', t)
+      return c.render(<p>x</p>, { title: 'T' })
+    })
+    const body = await (await app.request('/t')).text()
+    expect(body).not.toContain('plex-cyrillic')
+  })
+})
