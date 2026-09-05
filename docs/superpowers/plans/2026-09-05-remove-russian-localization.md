@@ -600,11 +600,11 @@ Templates first: after this the app still runs, and the Java in Task 6 is unrefe
 - Consumes: nothing.
 - Produces: templates reference only `${…}` expressions on English getters.
 
-- [ ] **Step 1: Inline all 90 `#{key}` occurrences**
+- [ ] **Step 1: Inline all 94 `#{key}` occurrences**
 
 For each `#{key}`, substitute the value from `src/main/resources/messages.properties`
 — **that file is the source of truth for this step and is still present; Task 6
-deletes it.** All 84 keys are there; do not invent copy for a key you cannot find. `th:text="#{nav.skip}"` becomes plain body text; the tag's existing placeholder text is replaced, and the `th:text` attribute is removed:
+deletes it.** All 87 keys are there; do not invent copy for a key you cannot find. `th:text="#{nav.skip}"` becomes plain body text; the tag's existing placeholder text is replaced, and the `th:text` attribute is removed:
 
 ```html
 <a class="skip-link" href="#main">Skip to content</a>

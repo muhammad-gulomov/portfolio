@@ -49,6 +49,15 @@ middleware and `CookieLocaleResolver` are gone, so it is inert. Rejected:
 emitting an expiry header, which means shipping cookie-clearing code on every
 response to tidy a value with no effect.
 
+**Deleting `LocaleConfig` does not leave the Spring app with no locale — it
+leaves Spring's implicit `AcceptHeaderLocaleResolver`.** A Spring MVC app
+always resolves *some* `Locale` for the request; removing the locale layer
+only removes whoever was pinning it. `LocaleConfig` was also calling
+`CookieLocaleResolver.setDefaultLocale(Locale.ENGLISH)`, which is why
+`application.properties` must now set `spring.web.locale=en` with
+`spring.web.locale-resolver=fixed` — otherwise a visitor's `Accept-Language`
+header drives `#temporals.format(...)` output directly.
+
 ## Part 1 — kanzen (first: 170 passing tests, not yet live)
 
 Order matters — inline the strings before deleting their source.
@@ -57,10 +66,12 @@ Order matters — inline the strings before deleting their source.
    `src/i18n/messages.ts` into their call sites in `views/Layout.tsx`,
    `views/pages/Home.tsx`, `BlogList.tsx`, `BlogPost.tsx`, `Login.tsx`.
 
-   **Five** strings are rendered through `raw()` and must keep that wrapper:
-   `Home.tsx:134` (`intro.p1`), `Home.tsx:135` (`intro.p2`),
-   `BlogList.tsx:35` (`blog.title`), `Login.tsx:54` (`login.title`),
-   `BlogPost.tsx:51` (`post.views`, which also takes an interpolated arg).
+   **Five** strings were rendered through `raw()`; **four** must keep that
+   wrapper: `Home.tsx:135` (`intro.p2`), `BlogList.tsx:35` (`blog.title`),
+   `Login.tsx:54` (`login.title`), `BlogPost.tsx:51` (`post.views`, which
+   also takes an interpolated arg). `intro.p1` (`Home.tsx:134`) is the
+   exception — it carries no markup, so it drops `raw()` and becomes plain
+   text.
    The header comment in `messages.ts` claims only two do — it is stale, and
    trusting it would strip markup from three headings. Inlined, they stay
    compile-time constants, so the existing XSS argument holds unchanged.
@@ -118,7 +129,7 @@ Order matters — inline the strings before deleting their source.
 
 **Templates**
 
-- Inline all **90 `#{key}` occurrences (84 unique keys)** across
+- Inline all **94 `#{key}` occurrences (87 unique keys)** across
   `home.html`, `login.html`, `blog/list.html`, `blog/post.html`,
   `fragments/header.html`, `fragments/footer.html`, taking English verbatim
   from `messages.properties`. Also the one `#messages.msg('meta.fallback')`
@@ -163,14 +174,14 @@ Irreversible; gated on the dump in step 1 existing.
 | kanzen | `grep -rn "i18n\|hreflang\|lang=\|data-lang" src public` returns only the literal `<html lang="en">` in `Layout.tsx` and `Login.tsx` |
 | Spring | `./mvnw -q package` compiles (repo has **zero tests** — `src/test/java/.../portfolio` is empty) |
 | Spring | Manual pass on localhost: `/`, `/blog`, a post, `/login`, and all four admin forms save correctly |
-| Spring | `grep -rn "Ru\b\|i18n\|Locale\|#{" src/main` returns nothing |
+| Spring | `grep -rn "Ru\b\|Russian\|Locale\|MessageSource\|#{" src/main` returns only `Locale.ENGLISH` and `import java.util.Locale;` in `WorkServiceImpl.java` |
 
 ## Risks
 
 - **Data loss (accepted, mitigated).** Commit B destroys the Russian
   translations. Mitigated by the `pg_dump`; the app is being retired at
   cutover regardless.
-- **No test net on the Spring side.** 90 hand-edited template sites with zero
+- **No test net on the Spring side.** 94 hand-edited template sites with zero
   automated coverage. Mitigated by compilation plus the manual route pass; a
   missed `#{key}` renders as literal `??key_en??` in Thymeleaf, which is
   loud rather than silent.
