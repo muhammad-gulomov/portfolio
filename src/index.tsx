@@ -9,7 +9,6 @@ import authRoutes from './routes/auth'
 import adminRoutes from './routes/admin'
 import telegramRoutes from './routes/telegram'
 import { ensureAdmin } from './bootstrap'
-import { localeMiddleware } from './i18n/locale'
 import { handleScheduled } from './telegram/scheduled'
 
 
@@ -35,15 +34,10 @@ app.use('*', async (c, next) => {
 
 // ── Global middleware ─────────────────────────────────────────────────────────
 
-// Skip HTML layout / locale / owner for health + Telegram webhook.
+// Skip HTML layout / owner for health + Telegram webhook.
 app.use('*', async (c, next) => {
   if (isBarePath(c.req.path)) return next()
   return Layout(c, next)
-})
-
-app.use('*', async (c, next) => {
-  if (isBarePath(c.req.path)) return next()
-  return localeMiddleware(c, next)
 })
 
 app.use('*', async (c, next) => {

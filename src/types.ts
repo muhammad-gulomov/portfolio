@@ -34,5 +34,4 @@ export interface AdminAccount { id: number; username: string; passwordHash: stri
 export type Vars = {
   owner: SiteProfile
   csrf?: string
-  t: (key: string, ...args: (string | number)[]) => string
 }

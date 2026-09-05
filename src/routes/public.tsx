@@ -48,12 +48,10 @@ publicRoutes.get('/blog/:slug', (c) => c.redirect('/', 302))
 
 publicRoutes.get('/', async (c) => {
   const work = await listWork(c.env.DB)
-  const t = c.get('t')
 
-  const present = t('work.present')
   const workPeriods: Record<number, string> = {}
   for (const w of work) {
-    workPeriods[w.id] = fmtPeriod(w.startDate, w.endDate, present)
+    workPeriods[w.id] = fmtPeriod(w.startDate, w.endDate, 'Present')
   }
 
   return c.render(
@@ -61,7 +59,6 @@ publicRoutes.get('/', async (c) => {
       owner={c.get('owner')}
       work={work}
       workPeriods={workPeriods}
-      t={t}
     />,
     { title: c.get('owner').name, css: 'home' },
   )

@@ -1,14 +1,11 @@
 import { Hono } from 'hono'
 import { describe, it, expect, beforeEach } from 'vitest'
 import type { SiteProfile, WorkExperience, Vars } from '../src/types'
-import { t as translate } from '../src/i18n/messages'
 import { Home } from '../src/views/pages/Home'
 import { BlogList } from '../src/views/pages/BlogList'
 import { BlogPost as BlogPostPage } from '../src/views/pages/BlogPost'
 import { Login } from '../src/views/pages/Login'
 import LayoutMiddleware, { clearCssCache } from '../src/views/Layout'
-
-const t = (key: string, ...args: (string | number)[]) => translate('en', key, ...args)
 
 const owner: SiteProfile = {
   name: 'Muhammad Gulomov',
@@ -66,7 +63,6 @@ describe('DOCTYPE emission', () => {
     app.use('*', LayoutMiddleware)
     app.get('/t', (c) => {
       c.set('owner', owner)
-      c.set('t', t)
       return c.render(<p>x</p>, { title: 'T' })
     })
     const res = await app.request('/t')
@@ -77,7 +73,7 @@ describe('DOCTYPE emission', () => {
 
   it('Login standalone component starts with <!DOCTYPE html>', async () => {
     const app = new Hono()
-    app.get('/login', (c) => c.html(<Login owner={owner} csrf="tok" t={t} />))
+    app.get('/login', (c) => c.html(<Login owner={owner} csrf="tok" />))
     const res = await app.request('/login')
     const body = await res.text()
     expect(body.toLowerCase()).toMatch(/^<!doctype html>/)
@@ -90,7 +86,6 @@ describe('Layout stylesheet inlining', () => {
 
   const boot = (c: any) => {
     c.set('owner', owner)
-    c.set('t', t)
   }
 
   it('inlines the stylesheets and emits no blocking <link> when ASSETS resolves', async () => {
@@ -163,7 +158,6 @@ describe('Home', () => {
           owner={owner}
           work={w}
           workPeriods={periods}
-          t={t}
         />,
       ),
     )
@@ -242,7 +236,6 @@ describe('Home', () => {
           owner={{ ...owner, github: '', linkedin: '', instagram: '' }}
           work={work}
           workPeriods={workPeriods}
-          t={t}
         />,
       ),
     )
@@ -272,7 +265,6 @@ describe('Home', () => {
           owner={{ ...owner, linkedin: '', instagram: '   ' }}
           work={work}
           workPeriods={workPeriods}
-          t={t}
         />,
       ),
     )
@@ -292,7 +284,6 @@ describe('Home', () => {
           owner={{ ...owner, github: 'github.com/bare' }}
           work={[]}
           workPeriods={{}}
-          t={t}
         />,
       ),
     )
@@ -308,7 +299,6 @@ describe('Home', () => {
           owner={{ ...owner, photoPath: '/img/portrait.webp' }}
           work={work}
           workPeriods={workPeriods}
-          t={t}
         />,
       ),
     )
@@ -352,7 +342,7 @@ describe('BlogList', () => {
       },
     ]
     const app = new Hono()
-    app.get('/bl', (c) => c.html(<BlogList posts={latestPosts} t={t} />))
+    app.get('/bl', (c) => c.html(<BlogList posts={latestPosts} />))
     const res = await app.request('/bl')
     expect(res.status).toBe(200)
     const body = await res.text()
@@ -376,7 +366,7 @@ describe('BlogPost', () => {
     const bodyHtml = '<p>The body content with <strong>bold text</strong> inside.</p>'
     const app = new Hono()
     app.get('/bp', (c) =>
-      c.html(<BlogPostPage owner={owner} post={post} bodyHtml={bodyHtml} t={t} />),
+      c.html(<BlogPostPage owner={owner} post={post} bodyHtml={bodyHtml} />),
     )
     const res = await app.request('/bp')
     const body = await res.text()
@@ -389,7 +379,7 @@ describe('Login', () => {
   it('renders standalone form posting to /login with _csrf hidden field', async () => {
     const app = new Hono()
     app.get('/login', (c) =>
-      c.html(<Login owner={owner} csrf="test-csrf-token" t={t} />),
+      c.html(<Login owner={owner} csrf="test-csrf-token" />),
     )
     const res = await app.request('/login')
     const body = await res.text()
@@ -407,7 +397,6 @@ describe('no language affordances remain', () => {
     app.use('*', LayoutMiddleware)
     app.get('/t', (c) => {
       c.set('owner', owner)
-      c.set('t', t)
       return c.render(<p>x</p>, { title: 'T', css: 'home' })
     })
     const body = await (await app.request('/t')).text()
@@ -420,7 +409,6 @@ describe('no language affordances remain', () => {
     app.use('*', LayoutMiddleware)
     app.get('/t', (c) => {
       c.set('owner', owner)
-      c.set('t', t)
       return c.render(<p>x</p>, { title: 'T' })
     })
     const body = await (await app.request('/t')).text()
@@ -432,7 +420,6 @@ describe('no language affordances remain', () => {
     app.use('*', LayoutMiddleware)
     app.get('/t', (c) => {
       c.set('owner', owner)
-      c.set('t', t)
       return c.render(<p>x</p>, { title: 'T' })
     })
     const body = await (await app.request('/t')).text()

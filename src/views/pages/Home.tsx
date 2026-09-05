@@ -5,13 +5,10 @@ import {
   TelegramIcon, MailIcon, GitHubIcon, LinkedInIcon, InstagramIcon,
 } from '../icons'
 
-type TFn = (key: string, ...args: (string | number)[]) => string
-
 interface HomeProps {
   owner: SiteProfile
   work: WorkExperience[]
   workPeriods: Record<number, string>
-  t: TFn
 }
 
 /**
@@ -97,14 +94,14 @@ function personJsonLd(owner: SiteProfile, work: WorkExperience[], site: string):
   return JSON.stringify(data).replace(/</g, '\\u003c')
 }
 
-export function Home({ owner, work, workPeriods, t }: HomeProps) {
+export function Home({ owner, work, workPeriods }: HomeProps) {
   // Two groups, not one undifferentiated row: how to reach him, then where to
   // read about him — the second ordered from most professional to least.
   // The wider gap between the groups is the only thing marking the split;
   // no divider or label is needed to make it legible.
   const reach: Contact[] = []
-  add(reach, t('cta.telegram'), href(owner.telegram), TelegramIcon)
-  add(reach, t('cta.email'), owner.email?.trim() ? `mailto:${owner.email.trim()}` : null, MailIcon)
+  add(reach, 'Telegram', href(owner.telegram), TelegramIcon)
+  add(reach, 'Email', owner.email?.trim() ? `mailto:${owner.email.trim()}` : null, MailIcon)
 
   const find: Contact[] = []
   add(find, 'GitHub', href(owner.github), GitHubIcon)
@@ -125,12 +122,12 @@ export function Home({ owner, work, workPeriods, t }: HomeProps) {
             {/* The heading sits inside the text column so it centres with the
                 paragraphs against the taller photo. Placed above the row, it
                 floated ~70px clear of the text it introduces. */}
-            <h2 class="section-title">{t('about.title')}</h2>
+            <h2 class="section-title">About me</h2>
             {/* raw() because the intro names the products it links to, and a
-                link inside a sentence cannot be expressed as plain text. The
-                strings are constants in messages.ts, not CMS content. */}
-            <p class="lede">{raw(t('intro.p1'))}</p>
-            <p class="lede">{raw(t('intro.p2'))}</p>
+                link inside a sentence cannot be expressed as plain text. This
+                is an author-written constant, never CMS content. */}
+            <p class="lede">I'm a lead engineer who builds products end to end — backend, web, and mobile.</p>
+            <p class="lede">{raw('Currently building at <a href="https://yodla-app.uz" target="_blank" rel="noopener">Yodla</a> (~500k users) and <a href="https://avtodars-avtomaktab.uz" target="_blank" rel="noopener">Avtodars</a>. On the side, I\'m building <a href="https://birga-app.uz" target="_blank" rel="noopener">Birga</a>.')}</p>
           </div>
 
           {owner.photoPath?.trim() && (
@@ -150,11 +147,11 @@ export function Home({ owner, work, workPeriods, t }: HomeProps) {
         </section>
 
         <section class="work" id="work">
-          <h2 class="section-title">{t('work.title')}</h2>
+          <h2 class="section-title">Work history</h2>
           <div class="ledger">
 
           {work.length === 0
-            ? <p class="empty">{t('work.empty')}</p>
+            ? <p class="empty">Nothing here yet.</p>
             : work.map((w) => {
               const [span, terminal] = splitPeriod(workPeriods[w.id] ?? '')
               const companyUrl = href(w.url)

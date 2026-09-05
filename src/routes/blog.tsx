@@ -9,10 +9,9 @@ const blogRoutes = new Hono<{ Bindings: Env; Variables: Vars }>()
 
 blogRoutes.get('/blog', async (c) => {
   const posts = await listPublished(c.env.DB)
-  const t = c.get('t')
   return c.render(
-    <BlogList posts={posts} t={t} />,
-    { title: t('page.blog'), css: 'blog' },
+    <BlogList posts={posts} />,
+    { title: 'Blog', css: 'blog' },
   )
 })
 
@@ -32,7 +31,6 @@ blogRoutes.get('/blog/:slug', async (c) => {
       owner={c.get('owner')}
       post={post}
       bodyHtml={bodyHtml}
-      t={c.get('t')}
     />,
     { title: post.title, css: 'blog' },
   )

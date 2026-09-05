@@ -96,18 +96,18 @@ export default jsxRenderer(
     const inlineCss = await loadCss(c, sheets)
 
     const owner = c.get('owner') as SiteProfile
-    const t = c.get('t') as (key: string, ...args: (string | number)[]) => string
 
     // The home route passes the owner's name as its title, so appending the
     // owner again produced "Muhammad Gulomov — Muhammad Gulomov" in the tab.
     const pageTitle = !title
-      ? t('page.home')
+      ? 'Portfolio'
       : owner?.name && title !== owner.name
         ? `${title} — ${owner.name}`
         : title
 
+    const FALLBACK = 'Lead engineer in Tashkent — backend, web, and mobile'
     const description = meta ?? (
-      owner?.name ? `${owner.name} — ${t('meta.fallback')}` : t('meta.fallback')
+      owner?.name ? `${owner.name} — ${FALLBACK}` : FALLBACK
     )
 
     return (
@@ -134,7 +134,7 @@ export default jsxRenderer(
           <meta property="og:image" content={`${SITE}/img/og.jpg`} />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
-          <meta property="og:image:alt" content={`${owner?.name ?? 'Muhammad Gulomov'} — ${t('meta.fallback')}`} />
+          <meta property="og:image:alt" content={`${owner?.name ?? 'Muhammad Gulomov'} — ${FALLBACK}`} />
           <meta property="og:locale" content="en_US" />
 
           <meta name="twitter:card" content="summary_large_image" />
@@ -166,7 +166,7 @@ export default jsxRenderer(
           <link rel="icon" href={FAVICON} />
         </head>
         <body>
-          <a class="skip-link" href="#main">{t('nav.skip')}</a>
+          <a class="skip-link" href="#main">Skip to content</a>
 
           <header class="topbar">
             {/* On the home page this is the document's h1 — the site's one
@@ -177,7 +177,7 @@ export default jsxRenderer(
               : <span class="brand"><a href="/">{owner?.name ?? 'Muhammad Gulomov'}</a></span>}
 
             <div class="utility">
-              <button class="theme-toggle" type="button" aria-label={t('nav.theme')} data-theme-toggle>
+              <button class="theme-toggle" type="button" aria-label="Switch color theme" data-theme-toggle>
                 {raw(`<svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`)}
                 {raw(`<svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`)}
               </button>

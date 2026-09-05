@@ -1,8 +1,6 @@
 import { raw } from 'hono/html'
 import type { BlogPost } from '../../types'
 
-type TFn = (key: string, ...args: (string | number)[]) => string
-
 // Format ISO date → "Jan 01 · 2026" (matches Thymeleaf `MMM dd · yyyy`)
 function fmtListDate(iso: string): string {
   const d = new Date(iso)
@@ -14,23 +12,22 @@ function fmtListDate(iso: string): string {
 
 interface BlogListProps {
   posts: BlogPost[]
-  t: TFn
 }
 
-export function BlogList({ posts, t }: BlogListProps) {
+export function BlogList({ posts }: BlogListProps) {
   return (
     <>
       <section class="blog-hero">
         <div class="container">
           <div class="masthead">
-            <span>{t('blog.masthead.title')}</span>
-            <span>{t('blog.masthead.notes')}</span>
-            <span>{t('blog.masthead.freq')}</span>
+            <span>The Blog</span>
+            <span>Field notes</span>
+            <span>Published irregularly</span>
           </div>
 
-          <div class="eyebrow reveal">{t('blog.eyebrow')}</div>
-          <h1 class="reveal" data-split="" style="--d:.1s">{raw(t('blog.title'))}</h1>
-          <p class="sub reveal" style="--d:.25s">{t('blog.sub')}</p>
+          <div class="eyebrow reveal">The blog</div>
+          <h1 class="reveal" data-split="" style="--d:.1s">{raw('Essays on <em>craft</em>, code, and the quiet in between.')}</h1>
+          <p class="sub reveal" style="--d:.25s">Short field notes from building things.</p>
         </div>
       </section>
 
@@ -52,14 +49,14 @@ export function BlogList({ posts, t }: BlogListProps) {
                       <h2>{post.title}</h2>
                       <p class="excerpt">{post.excerpt}</p>
                     </div>
-                    <div class="read-time">{t('blog.min', post.readingMinutes)}</div>
+                    <div class="read-time">{`${post.readingMinutes} min`}</div>
                   </a>
                 ))}
               </div>
             )
             : (
               <div class="empty-state reveal">
-                {t('blog.empty')}
+                No posts published yet.
               </div>
             )
           }
