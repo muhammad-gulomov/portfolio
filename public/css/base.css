@@ -34,6 +34,13 @@
     --chip:         rgba(15, 31, 25, 0.06);   /* soft neutral button ground */
     --chip-hover:   rgba(15, 31, 25, 0.11);
 
+    /* Background texture. The dot is the page's own ink at a fraction of a
+       percent — dark on light, light on dark — so the grid reads as tooth in
+       the paper rather than as a colour laid over it. The glow is the accent
+       already in the palette, not a second hue. */
+    --dot:          rgba(15, 31, 25, 0.055);
+    --glow:         rgba(10, 122, 85, 0.10);
+
     /* ── Type ─────────────────────────────────────────────
        Figtree throughout, with a system stack behind it for
        the swap window. */
@@ -84,6 +91,12 @@
     --on-accent:   #04150f;
     --chip:        rgba(255, 255, 255, 0.09);
     --chip-hover:  rgba(255, 255, 255, 0.16);
+
+    /* The dot flips to light ink; the glow follows the accent, which is
+       already lighter in this theme, so it carries a little more alpha to
+       stay visible against the near-black. */
+    --dot:         rgba(255, 255, 255, 0.055);
+    --glow:        rgba(63, 176, 136, 0.14);
 }
 
 /* =========================================================
@@ -157,6 +170,31 @@ body {
     font-synthesis-weight: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Background texture: a dot grid with one soft pool of accent above it.
+ *
+ * On a fixed pseudo-element rather than on `body`'s own background, for two
+ * reasons. A body background propagates to the canvas, which changes what
+ * percentage sizes resolve against — the glow would be positioned relative
+ * to the canvas, not the element, and drift as the page grows. And `fixed`
+ * keeps the grid still while the page scrolls, so the sheet reads as sitting
+ * ON the texture instead of dragging it along.
+ *
+ * z-index: -1 puts it above body's flat --ground fill and below every
+ * in-flow child, so nothing needs a stacking context of its own to clear it.
+ */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+        radial-gradient(60rem 26rem at 50% -7rem, var(--glow), transparent 70%),
+        radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 100% 100%, 1.375rem 1.375rem;
+    background-repeat: no-repeat, repeat;
 }
 
 h1, h2, h3, p, ul, ol, figure { margin: 0; }
