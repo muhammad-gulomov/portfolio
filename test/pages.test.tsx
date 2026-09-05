@@ -9,7 +9,6 @@ import { Login } from '../src/views/pages/Login'
 import LayoutMiddleware, { clearCssCache } from '../src/views/Layout'
 
 const t = (key: string, ...args: (string | number)[]) => translate('en', key, ...args)
-const lang = 'en' as const
 
 const owner: SiteProfile = {
   name: 'Muhammad Gulomov',
@@ -67,7 +66,6 @@ describe('DOCTYPE emission', () => {
     app.use('*', LayoutMiddleware)
     app.get('/t', (c) => {
       c.set('owner', owner)
-      c.set('lang', lang)
       c.set('t', t)
       return c.render(<p>x</p>, { title: 'T' })
     })
@@ -79,7 +77,7 @@ describe('DOCTYPE emission', () => {
 
   it('Login standalone component starts with <!DOCTYPE html>', async () => {
     const app = new Hono()
-    app.get('/login', (c) => c.html(<Login owner={owner} csrf="tok" t={t} lang={lang} />))
+    app.get('/login', (c) => c.html(<Login owner={owner} csrf="tok" t={t} />))
     const res = await app.request('/login')
     const body = await res.text()
     expect(body.toLowerCase()).toMatch(/^<!doctype html>/)
@@ -92,7 +90,7 @@ describe('Layout stylesheet inlining', () => {
 
   const boot = (c: any) => {
     c.set('owner', owner)
-    c.set('lang', lang); c.set('t', t)
+    c.set('t', t)
   }
 
   it('inlines the stylesheets and emits no blocking <link> when ASSETS resolves', async () => {
@@ -166,7 +164,6 @@ describe('Home', () => {
           work={w}
           workPeriods={periods}
           t={t}
-          lang={lang}
         />,
       ),
     )
@@ -246,7 +243,6 @@ describe('Home', () => {
           work={work}
           workPeriods={workPeriods}
           t={t}
-          lang={lang}
         />,
       ),
     )
@@ -277,7 +273,6 @@ describe('Home', () => {
           work={work}
           workPeriods={workPeriods}
           t={t}
-          lang={lang}
         />,
       ),
     )
@@ -298,7 +293,6 @@ describe('Home', () => {
           work={[]}
           workPeriods={{}}
           t={t}
-          lang={lang}
         />,
       ),
     )
@@ -315,7 +309,6 @@ describe('Home', () => {
           work={work}
           workPeriods={workPeriods}
           t={t}
-          lang={lang}
         />,
       ),
     )
@@ -359,7 +352,7 @@ describe('BlogList', () => {
       },
     ]
     const app = new Hono()
-    app.get('/bl', (c) => c.html(<BlogList posts={latestPosts} t={t} lang={lang} />))
+    app.get('/bl', (c) => c.html(<BlogList posts={latestPosts} t={t} />))
     const res = await app.request('/bl')
     expect(res.status).toBe(200)
     const body = await res.text()
@@ -383,7 +376,7 @@ describe('BlogPost', () => {
     const bodyHtml = '<p>The body content with <strong>bold text</strong> inside.</p>'
     const app = new Hono()
     app.get('/bp', (c) =>
-      c.html(<BlogPostPage owner={owner} post={post} bodyHtml={bodyHtml} t={t} lang={lang} />),
+      c.html(<BlogPostPage owner={owner} post={post} bodyHtml={bodyHtml} t={t} />),
     )
     const res = await app.request('/bp')
     const body = await res.text()
@@ -396,7 +389,7 @@ describe('Login', () => {
   it('renders standalone form posting to /login with _csrf hidden field', async () => {
     const app = new Hono()
     app.get('/login', (c) =>
-      c.html(<Login owner={owner} csrf="test-csrf-token" t={t} lang={lang} />),
+      c.html(<Login owner={owner} csrf="test-csrf-token" t={t} />),
     )
     const res = await app.request('/login')
     const body = await res.text()
@@ -414,7 +407,6 @@ describe('no language affordances remain', () => {
     app.use('*', LayoutMiddleware)
     app.get('/t', (c) => {
       c.set('owner', owner)
-      c.set('lang', lang)
       c.set('t', t)
       return c.render(<p>x</p>, { title: 'T', css: 'home' })
     })
@@ -428,7 +420,6 @@ describe('no language affordances remain', () => {
     app.use('*', LayoutMiddleware)
     app.get('/t', (c) => {
       c.set('owner', owner)
-      c.set('lang', lang)
       c.set('t', t)
       return c.render(<p>x</p>, { title: 'T' })
     })
@@ -441,7 +432,6 @@ describe('no language affordances remain', () => {
     app.use('*', LayoutMiddleware)
     app.get('/t', (c) => {
       c.set('owner', owner)
-      c.set('lang', lang)
       c.set('t', t)
       return c.render(<p>x</p>, { title: 'T' })
     })

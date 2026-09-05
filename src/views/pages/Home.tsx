@@ -5,7 +5,6 @@ import {
   TelegramIcon, MailIcon, GitHubIcon, LinkedInIcon, InstagramIcon,
 } from '../icons'
 
-type Lang = 'en' | 'ru'
 type TFn = (key: string, ...args: (string | number)[]) => string
 
 interface HomeProps {
@@ -13,7 +12,6 @@ interface HomeProps {
   work: WorkExperience[]
   workPeriods: Record<number, string>
   t: TFn
-  lang: Lang
 }
 
 /**
@@ -29,9 +27,9 @@ function href(value: string | null | undefined): string | null {
 
 /**
  * fmtPeriod joins its two halves with " — ". Splitting on that lets the
- * terminal word ("Present" / "н.в.") carry the accent on its own while
- * fmtPeriod keeps its single-string contract, which the route and its
- * tests both depend on.
+ * terminal word ("Present") carry the accent on its own while fmtPeriod
+ * keeps its single-string contract, which the route and its tests both
+ * depend on.
  */
 function splitPeriod(period: string): [string, string | null] {
   const at = period.lastIndexOf(' — ')

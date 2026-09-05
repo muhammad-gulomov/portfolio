@@ -1,14 +1,12 @@
 import { raw } from 'hono/html'
 import type { SiteProfile, BlogPost as BlogPostType } from '../../types'
 
-type Lang = 'en' | 'ru'
 type TFn = (key: string, ...args: (string | number)[]) => string
 
 // Format ISO date → "January 1, 2026" (matches Thymeleaf `MMMM d, yyyy`)
-function fmtPostDate(iso: string, lang: Lang): string {
+function fmtPostDate(iso: string): string {
   const d = new Date(iso)
-  const locale = lang === 'ru' ? 'ru-RU' : 'en-US'
-  return d.toLocaleDateString(locale, { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 }
 
 interface BlogPostProps {
@@ -16,10 +14,9 @@ interface BlogPostProps {
   post: BlogPostType
   bodyHtml: string
   t: TFn
-  lang: Lang
 }
 
-export function BlogPost({ owner, post, bodyHtml, t, lang }: BlogPostProps) {
+export function BlogPost({ owner, post, bodyHtml, t }: BlogPostProps) {
   return (
     <>
       <div class="reading-progress" id="readingProgress"></div>
@@ -30,7 +27,7 @@ export function BlogPost({ owner, post, bodyHtml, t, lang }: BlogPostProps) {
 
           <header class="post-header">
             <div class="meta reveal">
-              <span>{fmtPostDate(post.publishedAt, lang)}</span>
+              <span>{fmtPostDate(post.publishedAt)}</span>
               <span class="dot"></span>
               <span>{t('blog.minread', post.readingMinutes)}</span>
               <span class="dot"></span>

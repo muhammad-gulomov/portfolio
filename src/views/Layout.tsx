@@ -1,7 +1,6 @@
 import { jsxRenderer } from 'hono/jsx-renderer'
 import { raw } from 'hono/html'
 import type { SiteProfile } from '../types'
-import type { Lang } from '../i18n/messages'
 
 declare module 'hono' {
   interface ContextRenderer {
@@ -97,7 +96,6 @@ export default jsxRenderer(
     const inlineCss = await loadCss(c, sheets)
 
     const owner = c.get('owner') as SiteProfile
-    const lang = (c.get('lang') as Lang) ?? 'en'
     const t = c.get('t') as (key: string, ...args: (string | number)[]) => string
 
     // The home route passes the owner's name as its title, so appending the
@@ -113,7 +111,7 @@ export default jsxRenderer(
     )
 
     return (
-      <html lang={lang}>
+      <html lang="en">
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />

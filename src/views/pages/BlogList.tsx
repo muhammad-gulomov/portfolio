@@ -1,14 +1,12 @@
 import { raw } from 'hono/html'
 import type { BlogPost } from '../../types'
 
-type Lang = 'en' | 'ru'
 type TFn = (key: string, ...args: (string | number)[]) => string
 
 // Format ISO date → "Jan 01 · 2026" (matches Thymeleaf `MMM dd · yyyy`)
-function fmtListDate(iso: string, lang: Lang): string {
+function fmtListDate(iso: string): string {
   const d = new Date(iso)
-  const locale = lang === 'ru' ? 'ru-RU' : 'en-US'
-  const month = d.toLocaleDateString(locale, { month: 'short', timeZone: 'UTC' })
+  const month = d.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' })
   const day = String(d.getUTCDate()).padStart(2, '0')
   const year = d.getUTCFullYear()
   return `${month} ${day} · ${year}`
@@ -17,10 +15,9 @@ function fmtListDate(iso: string, lang: Lang): string {
 interface BlogListProps {
   posts: BlogPost[]
   t: TFn
-  lang: Lang
 }
 
-export function BlogList({ posts, t, lang }: BlogListProps) {
+export function BlogList({ posts, t }: BlogListProps) {
   return (
     <>
       <section class="blog-hero">
@@ -50,7 +47,7 @@ export function BlogList({ posts, t, lang }: BlogListProps) {
                     href={`/blog/${post.slug}`}
                     data-cursor="read"
                   >
-                    <div class="date">{fmtListDate(post.publishedAt, lang)}</div>
+                    <div class="date">{fmtListDate(post.publishedAt)}</div>
                     <div class="title-col">
                       <h2>{post.title}</h2>
                       <p class="excerpt">{post.excerpt}</p>

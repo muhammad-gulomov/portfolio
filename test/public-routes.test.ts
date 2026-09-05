@@ -153,9 +153,4 @@ describe('fmtPeriod', () => {
   it('formats an open-ended period ending with "Present"', () => {
     expect(fmtPeriod('2023-06-01', null)).toBe('Jun 2023 — Present')
   })
-
-  it('uses Russian short months and present label when lang=ru', () => {
-    expect(fmtPeriod('2022-01-15', '2024-03-01', 'н.в.', 'ru')).toBe('янв 2022 — мар 2024')
-    expect(fmtPeriod('2023-06-01', null, 'н.в.', 'ru')).toBe('июн 2023 — н.в.')
-  })
 })

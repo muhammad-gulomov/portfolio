@@ -1,7 +1,6 @@
 import { raw } from 'hono/html'
 import type { SiteProfile } from '../../types'
 
-type Lang = 'en' | 'ru'
 type TFn = (key: string, ...args: (string | number)[]) => string
 
 // Favicon (verbatim from Layout.tsx)
@@ -16,12 +15,11 @@ interface LoginProps {
   owner: SiteProfile | null
   csrf: string
   t: TFn
-  lang: Lang
   error?: boolean
   logout?: boolean
 }
 
-export function Login({ owner, csrf, t, lang, error, logout }: LoginProps) {
+export function Login({ owner, csrf, t, error, logout }: LoginProps) {
   const initial = owner?.name && owner.name.trim()
     ? owner.name[0].toLowerCase()
     : 'm'
@@ -29,7 +27,7 @@ export function Login({ owner, csrf, t, lang, error, logout }: LoginProps) {
   return (
     <>
     {raw('<!DOCTYPE html>')}
-    <html lang={lang}>
+    <html lang="en">
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />

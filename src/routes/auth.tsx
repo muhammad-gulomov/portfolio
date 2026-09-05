@@ -17,7 +17,6 @@ auth.get('/login', async (c) => {
       owner={c.get('owner')}
       csrf={csrf}
       t={c.get('t')}
-      lang={c.get('lang')}
       error={error}
       logout={logout}
     />,
