@@ -789,12 +789,21 @@ git commit -m "Delete the locale infrastructure and the Russian content columns"
 
 **GATE: the column drop must not run until Task 6 is deployed and the live site is verified.** Dropping first breaks the running instance, which is still selecting these columns on every request.
 
-**ORDERING AMENDED (Ruling R6, found during Task 5).** This task originally read
-deploy-then-backup. That was wrong. Once Tasks 5-6 ship, the admin forms no longer
-carry RU inputs, so **saving any entity in the admin nulls that row's `*_ru`
-columns** — a single edit between the deploy and the backup silently destroys that
-row's Russian before it is ever copied. The backup now runs FIRST, against
-production still serving the old code.
+**ORDERING AMENDED (Ruling R6, found during Task 5; rationale corrected).** This
+task originally read deploy-then-backup; the backup now runs FIRST.
+
+The precise hazard: with Task 5 deployed but **not** Task 6, the entities still map
+the `*Ru` fields while the admin forms no longer submit them, so
+`AdminController:149` and its siblings write `null` over that row's Russian on the
+next save. Deploying Tasks 5 and 6 **together**, which is what this plan does,
+avoids that entirely — Task 6 unmaps the fields, so Hibernate stops emitting those
+columns in its UPDATE and leaves the data untouched.
+
+So the nulling does not fire on the intended path. The backup still moves first for
+two reasons: it costs one minute and removes the failure mode completely if the two
+commits ever ship separately (a partial deploy, a rollback that lands between them),
+and backing up before any migration that touches the data is the order you want
+regardless of which specific mechanism you have reasoned your way out of.
 
 **Files:**
 - Create: `$HOME/Desktop/ru-site_profile.csv`, `ru-work.csv`, `ru-projects.csv`,
