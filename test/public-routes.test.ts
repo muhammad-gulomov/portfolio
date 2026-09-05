@@ -84,6 +84,19 @@ describe('GET /', () => {
   })
 })
 
+// ─── GET /sitemap.xml ──────────────────────────────────────────────────────────
+
+describe('GET /sitemap.xml', () => {
+  it('sitemap lists one URL with no language alternates', async () => {
+    const res = await SELF.fetch('https://x/sitemap.xml')
+    expect(res.status).toBe(200)
+    const xml = await res.text()
+    expect(xml).not.toContain('xhtml')
+    expect(xml).not.toContain('hreflang')
+    expect(xml).toContain('<loc>https://kanzen.uz/</loc>')
+  })
+})
+
 // ─── GET /blog ────────────────────────────────────────────────────────────────
 
 describe('GET /blog', () => {

@@ -122,27 +122,22 @@ export default jsxRenderer(
           <meta name="description" content={description} />
           <title>{pageTitle}</title>
 
-          {/* Canonical per language. kanzen.uz and www.kanzen.uz both resolve,
-              and ?lang=ru is a distinct URL, so without this Google sees three
-              addresses for one page and splits the ranking signals between
-              them. The Worker also 301s www -> apex, which is the stronger fix;
-              canonical covers the query-string variants. */}
-          <link rel="canonical" href={lang === 'ru' ? `${SITE}/?lang=ru` : `${SITE}/`} />
-          <link rel="alternate" hreflang="en" href={`${SITE}/`} />
-          <link rel="alternate" hreflang="ru" href={`${SITE}/?lang=ru`} />
-          <link rel="alternate" hreflang="x-default" href={`${SITE}/`} />
+          {/* kanzen.uz and www.kanzen.uz are both custom domains on this
+              Worker, and query strings make more addresses still. Canonical
+              names the one that counts. The Worker also 301s www -> apex,
+              which is the stronger fix; this covers the rest. */}
+          <link rel="canonical" href={`${SITE}/`} />
 
           <meta property="og:type" content="profile" />
           <meta property="og:site_name" content={owner?.name ?? 'Muhammad Gulomov'} />
           <meta property="og:title" content={pageTitle} />
           <meta property="og:description" content={description} />
-          <meta property="og:url" content={lang === 'ru' ? `${SITE}/?lang=ru` : `${SITE}/`} />
+          <meta property="og:url" content={`${SITE}/`} />
           <meta property="og:image" content={`${SITE}/img/og.jpg`} />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
           <meta property="og:image:alt" content={`${owner?.name ?? 'Muhammad Gulomov'} — ${t('meta.fallback')}`} />
-          <meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'} />
-          <meta property="og:locale:alternate" content={lang === 'ru' ? 'en_US' : 'ru_RU'} />
+          <meta property="og:locale" content="en_US" />
 
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content={pageTitle} />

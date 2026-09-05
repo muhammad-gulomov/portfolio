@@ -435,4 +435,21 @@ describe('no language affordances remain', () => {
     const body = await (await app.request('/t')).text()
     expect(body).not.toContain('plex-cyrillic')
   })
+
+  it('emits one canonical and no hreflang alternates', async () => {
+    const app = new Hono<{ Variables: Vars }>()
+    app.use('*', LayoutMiddleware)
+    app.get('/t', (c) => {
+      c.set('owner', owner)
+      c.set('lang', lang)
+      c.set('t', t)
+      return c.render(<p>x</p>, { title: 'T' })
+    })
+    const body = await (await app.request('/t')).text()
+    expect(body).not.toContain('hreflang')
+    expect(body).not.toContain('og:locale:alternate')
+    expect(body).not.toContain('?lang=')
+    expect(body).toContain('<link rel="canonical" href="https://kanzen.uz/"')
+    expect(body).toContain('content="en_US"')
+  })
 })
