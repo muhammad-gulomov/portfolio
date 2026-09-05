@@ -787,23 +787,28 @@ git commit -m "Delete the locale infrastructure and the Russian content columns"
 
 ## Task 7: Back up and drop the nine columns (Spring, manual, gated)
 
-**GATE: do not start until Task 6 is deployed to Render and the live site is verified.** Dropping first breaks the running instance, which is still selecting these columns on every request.
+**GATE: the column drop must not run until Task 6 is deployed and the live site is verified.** Dropping first breaks the running instance, which is still selecting these columns on every request.
+
+**ORDERING AMENDED (Ruling R6, found during Task 5).** This task originally read
+deploy-then-backup. That was wrong. Once Tasks 5-6 ship, the admin forms no longer
+carry RU inputs, so **saving any entity in the admin nulls that row's `*_ru`
+columns** — a single edit between the deploy and the backup silently destroys that
+row's Russian before it is ever copied. The backup now runs FIRST, against
+production still serving the old code.
 
 **Files:**
 - Create: `$HOME/Desktop/ru-site_profile.csv`, `ru-work.csv`, `ru-projects.csv`,
   `ru-blog.csv` (outside both repos, never committed)
 
 **Interfaces:**
-- Consumes: a deployed Task 6.
+- Consumes: Task 6 committed (not yet deployed).
 - Produces: nothing in code — this is a schema change only.
 
-- [ ] **Step 1: Deploy Task 6 and verify**
+- [ ] **Step 1: Back up the Russian content — BEFORE deploying**
 
-Push the branch, merge, let Render build. Open the live site: `/`, `/blog`, a post, `/healthz`. Expected: all 200, all English. **The nine columns still exist at this point and are simply unread.**
-
-- [ ] **Step 2: Back up the Russian content**
-
-Muhammad runs this — the Supabase credentials are env-injected on Render and are not in the repo:
+Muhammad runs this — the Supabase credentials are env-injected on Render and are
+not in the repo. Production is still running the old code at this point, so every
+`*_ru` value is still intact.
 
 `psql`'s `\copy` does not expand `~` — it is a client-side meta-command, not a
 shell word, so a tilde inside the quoted path is written as a literal directory
@@ -817,14 +822,29 @@ psql "$DB_URL" -c "\copy (SELECT id, tagline_ru, description_ru FROM projects) T
 psql "$DB_URL" -c "\copy (SELECT id, title_ru, excerpt_ru, content_ru FROM blog_posts) TO '$OUT/ru-blog.csv' CSV HEADER"
 ```
 
-- [ ] **Step 3: Confirm the backup is real**
+- [ ] **Step 2: Confirm the backup is real**
 
 ```bash
 wc -l "$HOME"/Desktop/ru-*.csv
 ```
-Expected: each file has a header plus at least one row. **If any file is empty or missing, stop — Step 4 is irreversible.**
+Expected: each file has a header plus at least one row. **If any file is empty or
+missing, stop — Step 5 is irreversible and nothing else recovers this text.**
+
+- [ ] **Step 3: Deploy Tasks 5-6 and verify**
+
+Push the branch, merge, let Render build. Open the live site: `/`, `/blog`, a post,
+`/login`, `/healthz`. Expected: all 200, all English, no `??key_en??` anywhere in
+the page source. **The nine columns still exist at this point and are simply
+unread.**
 
 - [ ] **Step 4: Drop the columns**
+
+Column names are confirmed against the local mirror of this schema — all nine
+exist with exactly these snake_case names. Re-confirm against production first:
+
+```sql
+SELECT table_name, column_name FROM information_schema.columns WHERE column_name LIKE '%_ru';
+```
 
 ```sql
 ALTER TABLE site_profile     DROP COLUMN tagline_ru;
@@ -836,12 +856,6 @@ ALTER TABLE projects         DROP COLUMN tagline_ru,
 ALTER TABLE blog_posts       DROP COLUMN title_ru,
                              DROP COLUMN excerpt_ru,
                              DROP COLUMN content_ru;
-```
-
-Column names assume Hibernate's default camelCase → snake_case mapping. **Verify against the live schema first:**
-
-```sql
-SELECT table_name, column_name FROM information_schema.columns WHERE column_name LIKE '%_ru';
 ```
 
 - [ ] **Step 5: Verify the site still serves**
